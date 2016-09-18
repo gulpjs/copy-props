@@ -4,8 +4,8 @@ Copy properties deeply between two objects.
 
 [![NPM][npm-img]][npm-url]
 
-[npm-img]: https//nodei.co/npm/copy-props.png
-[npm-url]: https//nodei.co/npm/copy-props/
+[npm-img]: https://nodei.co/npm/copy-props.png
+[npm-url]: https://nodei.co/npm/copy-props/
 [travis-img]: https://travis-ci.org/sttk/copy-props.svg?branch=master
 [travis-url]: https://travis-ci.org/sttk/copy-props
 [appveyor-img]: https://ci.appveyor.com/api/projects/status/github/sttk/copy-props?branch=master&svg=true
