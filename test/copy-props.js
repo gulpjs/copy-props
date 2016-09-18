@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var testrun = require('testrun').mocha;
-var copyProps = require('../lib/copy-props');
+var copyProps = require('../');
 
 function testfn(testcase) {
   var ret = copyProps(testcase.src, testcase.dst, testcase.map, testcase.fn);
