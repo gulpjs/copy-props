@@ -1,13 +1,17 @@
 'use strict';
 
 var testrun = require('testrun').mocha;
+var assert = require('assert');
 var foreachProps = require('../lib/foreach-props');
+var assign = require('lodash.assign');
 
 function testfn(testcase) {
   var logs = [];
+  var src = assign({}, testcase.obj);
   foreachProps(testcase.obj, function(value, keychain) {
     logs.push({ keychain: keychain, value: value });
   });
+  assert.deepEqual(testcase.obj, src);
   return logs;
 }
 

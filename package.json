@@ -39,6 +39,7 @@
     "testrun": "^0.7.0"
   },
   "dependencies": {
+    "lodash.assign": "^4.2.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.set": "^4.3.2"
   }

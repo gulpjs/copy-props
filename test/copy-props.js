@@ -2,10 +2,13 @@
 
 var assert = require('assert');
 var testrun = require('testrun').mocha;
+var assign = require('lodash.assign');
 var copyProps = require('../');
 
 function testfn(testcase) {
+  var src = assign({}, testcase.src);
   var ret = copyProps(testcase.src, testcase.dst, testcase.map, testcase.fn);
+  assert.deepEqual(src, testcase.src);
   assert.strictEqual(ret, testcase.dst);
   return ret;
 }
