@@ -1,6 +1,6 @@
 {
   "name": "copy-props",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Copy properties deeply between two objects.",
   "main": "index.js",
   "files": [
