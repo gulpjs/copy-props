@@ -3,7 +3,7 @@
 var assert = require('assert');
 var testrun = require('testrun').mocha;
 var assign = require('lodash.assign');
-var copyProps = require('../lib/copy-props');
+var copyProps = require('../');
 
 function testfn(testcase) {
   var src = assign({}, testcase.src);
@@ -13,7 +13,7 @@ function testfn(testcase) {
   return ret;
 }
 
-testrun('lib/copyProps', testfn, [
+testrun('copyProps', testfn, [
   {
     name: 'When both map and converter are undefined',
     cases: [
@@ -181,6 +181,135 @@ testrun('lib/copyProps', testfn, [
           }
         },
         expected: { x: { y: { z: 10, w: 'CCC' }, u: { v: 'DDD' } } },
+      },
+    ],
+  },
+  {
+    name: 'When converter is defined as 3rd argument',
+    cases: [
+      {
+        name: 'And covert all of src property values',
+        src: { a: 1, b: { c: 2, d: 3 } },
+        dst: {},
+        map: function(value) {
+          return value * 2;
+        },
+        expected: { a: 2, b: { c: 4, d: 6 } },
+      },
+      {
+        name: 'And covert src property values by their keychains',
+        src: { a: 1, b: { c: 2, d: 3 } },
+        dst: {},
+        map: function(value, keychain) {
+          if (keychain === 'a') {
+            return value * 2;
+          } else if (keychain === 'b.c') {
+            return 'x';
+          } else if (keychain === 'b.d') {
+            return value * 10;
+          }
+        },
+        expected: { a: 2, b: { c: 'x', d: 30 } },
+      },
+    ],
+  },
+  {
+    name: 'When data type of arguments are illegal',
+    cases: [
+      {
+        name: 'And src is ${testcase.src}',
+        src: undefined,
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And src is ${testcase.src}',
+        src: null,
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And src is ${testcase.src}',
+        src: true,
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And src is ${testcase.src}',
+        src: false,
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And src is ${testcase.src}',
+        src: [],
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And src is ${testcase.src}',
+        src: new Date(),
+        dst: {},
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: undefined,
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: null,
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: true,
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: false,
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: [],
+        error: TypeError,
+      },
+      {
+        name: 'And dst is ${testcase.dst}',
+        src: {},
+        dst: new Date(),
+        error: TypeError,
+      },
+      {
+        name: 'And 3rd argument is neither an object nor a function',
+        src: {},
+        dst: {},
+        map: 'aaa',
+        error: TypeError,
+      },
+      {
+        name: 'And 4th argument is not a function',
+        src: {},
+        dst: {},
+        map: {},
+        fn: 123,
+        error: TypeError,
+      },
+      {
+        name: 'And 4th argument is specified but 3rd is not an object',
+        src: {},
+        dst: {},
+        map: function() {},
+        fn: function() {},
+        error: TypeError,
       },
     ],
   },
