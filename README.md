@@ -69,21 +69,55 @@ Usage
     // => { a: 2, b: { b1: 'BBB' } }
     ```
 
+* Can use an array instead of a map as property mapping :
+
+    ```js
+    var src = { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } };
+    var dst = { a: 9, b: { c: 'xxx' }, d: { e: 'yyy' } };
+    var fromToProps = [ 'a.b.c', 'd.e' ];
+    copyProps(src, dst, fromToProps);
+    // => { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } }
+    ```
+
+* Can copy reversively (from *dst* to *src*) by boolean flag : 
+
+    ```js
+    var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
+    var dst = { a: 2, b: { b1: 'xxx', b2: 'yyy' } };
+
+    copyProps(src, dst, true);
+    // => { a: 2, b: { b1: 'xxx', b2: 'yyy' }, c: 'ccc' }
+    ```
+
+    ```js
+    var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc', d: 'ddd' };
+    var dst = { f: { a: 2, b1: 'xxx', b2: 'yyy' }, e: 'zzz' };
+
+    copyProps(src, dst, {
+      a: 'f.a',
+      'b.b1': 'f.b1',
+      'b.b2': 'f.b2',
+      'c': 'f.c',
+    }, true);
+    // => { a: 2, b: { b1: 'bbb', b2: 'yyy' }, c: 'ccc', d: 'ddd' }
+    ```
+
 API
 ---
 
-### <u>copyProps(src, dst [, fromToProps] [, converter]) => object</u>
+### <u>copyProps(src, dst [, fromToProps] [, converter] [, isReversed]) => object</u>
 
 Copy properties of *src* to *dst* deeply.
-If *map* is given, it is able to copy between different properties.
+If *fromToProps* is given, it is able to copy between different properties.
 If *converter* is given, it is able to convert the terminal values.
 
 * **Arguments:**
 
     * **src** [object] : a source object of copy.
     * **dst** [object] : a destinate object of copy.
-    * **fromToProps** [object] : an object mapping properties between *src* and *dst*.
-    * **converter** [function] : a function to convert terminal values in *src*. 
+    * **fromToProps** [object | array] : an object mapping properties between *src* and *dst*. (optional)
+    * **converter** [function] : a function to convert terminal values in *src*. (optional) 
+    * **isReversed** [boolean] : a flag to copy reversively. (optional)
 
 * **Return** [object] : *dst* object after copying.
 
@@ -99,6 +133,8 @@ copyProps(src, dst, {
   'aaa.bbb.ccc' : 'xxx.yyy'
 })
 ```
+
+*fromToProps* can be an array. In that case, the array works as a map which has pairs of same key and value.
 
 #### API of *converter*
 
