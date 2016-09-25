@@ -79,7 +79,7 @@ Usage
     // => { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } }
     ```
 
-* Can copy reversively (from *dst* to *src*) by option `{ reverse: true }` :
+* Can copy reversively (from *dst* to *src*) by option `{ reverse: true }` (and return *src*):
 
     ```js
     var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
@@ -177,7 +177,7 @@ copyProps(src, dst, {
 
 *opts* can have following properties:
 
-* **reverse** [boolean] : Copys reversively from *dst* to *src*. *fromToProps* is also reversively used from value to key. This default value is `false`.
+* **reverse** [boolean] : Copys reversively from *dst* to *src* and returns *src* object. *fromToProps* is also reversively used from value to key. This default value is `false`.
 * **rejectNull** [boolean] : if this option is `true`, a value of a source object or a return value of *converter* is not copied when the value is null. The default value is `true`.
 
 
