@@ -1,10 +1,12 @@
 'use strict';
 
+/* eslint max-statements: "off" */
+
 var inspect = require('util').inspect;
 var isPlainObject = require('lodash.isplainobject');
 var copyProps = require('./lib/copy-props');
 
-module.exports = function(src, dst, map, converter) {
+module.exports = function(src, dst, map, converter, isReversed) {
   if (!isPlainObject(src)) {
     throw new TypeError('The 1st argument need to be a plain object: ' +
       inspect(src));
@@ -15,32 +17,38 @@ module.exports = function(src, dst, map, converter) {
       inspect(dst));
   }
 
-  if (converter) {
-    if (typeof converter !== 'function') {
-      throw new TypeError('The 4th argument need to be a function: ' +
-        inspect(converter));
-    }
-
-    if (map != null && !isPlainObject(map)) {
-      throw new TypeError('The 3th argument need to be a plain object: ' +
-        inspect(map));
-    }
-
-    return copyProps(src, dst, map, converter);
+  if (typeof map === 'boolean') {
+    return copyProps(src, dst, undefined, undefined, map);
   }
 
-  if (map) {
-    if (typeof map === 'function') {
+  if (typeof map === 'function') {
+    if (typeof converter === 'boolean') {
+      return copyProps(src, dst, undefined, map, converter);
+    }
+    if (isReversed == null && converter == null) {
       return copyProps(src, dst, undefined, map);
     }
-
-    if (!isPlainObject(map)) {
-      throw new TypeError('The 3th argument need to be a plain object or ' +
-        'a function: ' + inspect(map));
-    }
-
-    return copyProps(src, dst, map);
   }
 
-  return copyProps(src, dst);
+  if (typeof converter === 'boolean') {
+    isReversed = converter;
+    converter = undefined;
+  }
+
+  if (isReversed != null && typeof isReversed !== 'boolean') {
+    throw new TypeError('The 5th argument need to be a boolean: ' +
+      inspect(isReversed));
+  }
+
+  if (converter != null && typeof converter !== 'function') {
+    throw new TypeError('The 4th argument need to be a function: ' +
+      inspect(converter));
+  }
+
+  if (map != null && !isPlainObject(map)) {
+    throw new TypeError('The 3th argument need to be a plain object: ' +
+      inspect(map));
+  }
+
+  return copyProps(src, dst, map, converter, isReversed);
 };
