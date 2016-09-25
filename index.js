@@ -6,7 +6,7 @@ var inspect = require('util').inspect;
 var isPlainObject = require('lodash.isplainobject');
 var copyProps = require('./lib/copy-props');
 
-module.exports = function(src, dst, map, converter, isReversed) {
+module.exports = function(src, dst, fromTo, converter, isReversed) {
   if (!isPlainObject(src)) {
     throw new TypeError('The 1st argument need to be a plain object: ' +
       inspect(src));
@@ -17,16 +17,16 @@ module.exports = function(src, dst, map, converter, isReversed) {
       inspect(dst));
   }
 
-  if (typeof map === 'boolean') {
-    return copyProps(src, dst, undefined, undefined, map);
+  if (typeof fromTo === 'boolean') {
+    return copyProps(src, dst, undefined, undefined, fromTo);
   }
 
-  if (typeof map === 'function') {
+  if (typeof fromTo === 'function') {
     if (typeof converter === 'boolean') {
-      return copyProps(src, dst, undefined, map, converter);
+      return copyProps(src, dst, undefined, fromTo, converter);
     }
     if (isReversed == null && converter == null) {
-      return copyProps(src, dst, undefined, map);
+      return copyProps(src, dst, undefined, fromTo);
     }
   }
 
@@ -45,10 +45,10 @@ module.exports = function(src, dst, map, converter, isReversed) {
       inspect(converter));
   }
 
-  if (map != null && !isPlainObject(map)) {
-    throw new TypeError('The 3th argument need to be a plain object: ' +
-      inspect(map));
+  if (fromTo != null && !isPlainObject(fromTo) && !Array.isArray(fromTo)) {
+    throw new TypeError('The 3th argument need to be a plain object or ' +
+      'an array: ' + inspect(fromTo));
   }
 
-  return copyProps(src, dst, map, converter, isReversed);
+  return copyProps(src, dst, fromTo, converter, isReversed);
 };
