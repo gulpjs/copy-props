@@ -79,7 +79,7 @@ Usage
     // => { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } }
     ```
 
-* Can copy reversively (from *dst* to *src*) by boolean flag : 
+* Can copy reversively (from *dst* to *src*) by option `{ reverse: true }` :
 
     ```js
     var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
@@ -98,14 +98,38 @@ Usage
       'b.b1': 'f.b1',
       'b.b2': 'f.b2',
       'c': 'f.c',
-    }, true);
+    }, { reverse: true });
     // => { a: 2, b: { b1: 'bbb', b2: 'yyy' }, c: 'ccc', d: 'ddd' }
+    ```
+
+* Can reject to copy null value by option `{ rejectNull: true }` :
+
+    ```js
+    var src = { a: 8, b: { c: -1, d: null } };
+    var dst = { a: 1, b: { c:  2, e: 4 } };
+
+    copyProps(src, dst, function(v) {
+      return (typeof v !== 'number' || v < 0) ? null : v;
+    }, { rejectNull: true });
+    // => { a: 8, b: { c: 2, e: 4 } }
+    ```
+
+    ***This `opts` must be passed at the place of the 4rd argument or later.***
+    
+    So, when you use the `opts` and don't use neither `fromToProps` nor `converter`, write the code as follows:
+
+    ```js
+    var src = { a: 8, b: { c: -1, d: null } };
+    var dst = { a: 1, b: { c:  2, e: 4 } };
+
+    copyProps(src, dst, null, { rejectNull: true });
+    // => { a: 8, b: { c: -1, e: 4 } }
     ```
 
 API
 ---
 
-### <u>copyProps(src, dst [, fromToProps] [, converter] [, isReversed]) => object</u>
+### <u>copyProps(src, dst [, fromToProps] [, converter] [, opts]) => object</u>
 
 Copy properties of *src* to *dst* deeply.
 If *fromToProps* is given, it is able to copy between different properties.
@@ -117,11 +141,11 @@ If *converter* is given, it is able to convert the terminal values.
     * **dst** [object] : a destinate object of copy.
     * **fromToProps** [object | array] : an object mapping properties between *src* and *dst*. (optional)
     * **converter** [function] : a function to convert terminal values in *src*. (optional) 
-    * **isReversed** [boolean] : a flag to copy reversively. (optional)
+    * **opts** [object] : an option object which specifys copy's behaviors (optional)
 
 * **Return** [object] : *dst* object after copying.
 
-#### Format of *fromToProps*
+#### *Format of fromToProps*
 
 *fromToProps* is a non-nested key-value object. And the *key*s are property key chains of *src* and the *value*s are property key chains of *dst*. 
 The key chain is a string which is concatenated property keys on each level with dots, like `'aaa.bbb.ccc'`.
@@ -136,7 +160,7 @@ copyProps(src, dst, {
 
 *fromToProps* can be an array. In that case, the array works as a map which has pairs of same key and value.
 
-#### API of *converter*
+#### *API of converter*
 
 **<u>converter(value, keyChain) => any</u>**
 
@@ -148,6 +172,14 @@ copyProps(src, dst, {
     * **keyChain** [string] : a string of property keys concatenated with dots.
 
 * **Return:** [any] : converted value.
+
+#### *Properties of opts*
+
+*opts* can have following properties:
+
+* **reverse** [boolean] : Copys reversively from *dst* to *src*. *fromToProps* is also reversively used from value to key. This default value is `false`.
+* **rejectNull** [boolean] : if this option is `true`, a value of a source object or a return value of *converter* is not copied when the value is null. The default value is `true`.
+
 
 License
 -------

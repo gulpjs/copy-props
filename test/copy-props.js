@@ -3,7 +3,8 @@
 var assert = require('assert');
 var testrun = require('testrun').mocha;
 var assign = require('lodash.assign');
-var copyProps = require('../');
+var copyProps = require('../lib/copy-props');
+
 
 function testfn(testcase) {
   var src = testcase.src;
@@ -12,14 +13,14 @@ function testfn(testcase) {
   var dstBak = assign({}, testcase.dst);
 
   var ret = copyProps(testcase.src, testcase.dst, testcase.map, testcase.fn,
-    testcase.rev);
+    testcase.opts);
 
   assert.strictEqual(src, testcase.src);
   assert.strictEqual(dst, testcase.dst);
 
-  if (testcase.rev === true ||
-      testcase.fn  === true ||
-      testcase.map === true) {
+  if (testcase.opts && testcase.opts.reverse === true ||
+      testcase.fn && testcase.fn.reverse === true ||
+      testcase.map && testcase.map.reverse === true) {
     assert.strictEqual(ret, testcase.src);
     assert.deepEqual(dst, dstBak);
   } else {
@@ -99,6 +100,12 @@ testrun('copyProps', testfn, [
         src: { a: { a1: 3 },  },
         dst: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
         expected: { a: { a1: 3, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
+      },
+      {
+        name: 'And src contains null value',
+        src: { a: { b: 1, c: null } },
+        dst: { a: { b: 9, c: 'c' } },
+        expected: { a: { b: 1, c: 'c' } },
       },
     ],
   },
@@ -187,30 +194,30 @@ testrun('copyProps', testfn, [
     ],
   },
   {
-    name: 'When only src, dst and isReversed are defined',
+    name: 'When src, dst and opts.reverse are defined',
     cases: [
       {
-        name: 'And isReversed is false',
+        name: 'And opts.reverse is false',
         cases: [
           {
             name: 'And src is {} and dst is {}',
             src: {},
             dst: {},
-            rev: false,
+            opts: { reverse: false },
             expected: {},
           },
           {
             name: 'And dst is empty',
             src: { a: 1, b: 'b', c: true },
             dst: {},
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And dst is empty and src is a nested object',
             src: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
             dst: {},
-            rev: false,
+            opts: { reverse: false },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -219,14 +226,14 @@ testrun('copyProps', testfn, [
             name: 'And src is empty',
             src: {},
             dst: { a: 1, b: 'b', c: true },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And src is empty and dst is a nested object',
             src: {},
             dst: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
-            rev: false,
+            opts: { reverse: false },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -235,14 +242,14 @@ testrun('copyProps', testfn, [
             name: 'And src and dst are same compositions',
             src: { a: 1, b: 'b', c: true },
             dst: { a: 2, b: 'x', c: false },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And src and dst are same compositions and nested objects',
             src: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
             dst: { a: { a1: 9, a2: 8, a3: 7 }, b: { b1: 'BX', b2: 'BY' } },
-            rev: false,
+            opts: { reverse: false },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -251,54 +258,54 @@ testrun('copyProps', testfn, [
             name: 'And src has more properties than dst',
             src: { a: 1, b: 2, c: 3 },
             dst: { a: 9 },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 1, b: 2, c: 3 },
           },
           {
             name: 'And src has more properties than dst and an nested object',
             src: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
             dst: { a: { a1: 3 },  },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
           },
           {
             name: 'And dst has more properties than src',
             src: { a: 9 },
             dst: { a: 1, b: 2, c: 3 },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 9, b: 2, c: 3 },
           },
           {
             name: 'And dst has more properties than src and an nested object',
             src: { a: { a1: 3 },  },
             dst: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: { a1: 3, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
           },
         ],
       },
       {
-        name: 'And isReversed is true',
+        name: 'And opts.reverse is true',
         cases: [
           {
             name: 'And src is {} and dst is {}',
             src: {},
             dst: {},
-            rev: true,
+            opts: { reverse: true },
             expected: {},
           },
           {
             name: 'And src is empty',
             src: {},
             dst: { a: 1, b: 'b', c: true },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And src is empty and dst is a nested object',
             src: {},
             dst: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
-            rev: true,
+            opts: { reverse: true },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -307,14 +314,14 @@ testrun('copyProps', testfn, [
             name: 'And dst is empty',
             src: { a: 1, b: 'b', c: true },
             dst: {},
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And dst is empty and src is a nested object',
-            src: {},
-            dst: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
-            rev: true,
+            src: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
+            dst: {},
+            opts: { reverse: true },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -323,14 +330,14 @@ testrun('copyProps', testfn, [
             name: 'And src and dst are same compositions',
             src: { a: 2, b: 'x', c: false },
             dst: { a: 1, b: 'b', c: true },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 1, b: 'b', c: true },
           },
           {
             name: 'And src and dst are same compositions and nested objects',
             src: { a: { a1: 9, a2: 8, a3: 7 }, b: { b1: 'BX', b2: 'BY' } },
             dst: { a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' } },
-            rev: true,
+            opts: { reverse: true },
             expected: {
               a: { a1: 1, a2: 2, a3: 3 }, b: { b1: 'b1', b2: 'b2' },
             },
@@ -339,28 +346,28 @@ testrun('copyProps', testfn, [
             name: 'And dst has more properties than src',
             src: { a: 9 },
             dst: { a: 1, b: 2, c: 3 },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 1, b: 2, c: 3 },
           },
           {
             name: 'And dst has more properties than src and an nested object',
             src: { a: { a1: 3 },  },
             dst: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
           },
           {
             name: 'And dst has more properties than src',
             src: { a: 1, b: 2, c: 3 },
             dst: { a: 9 },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 9, b: 2, c: 3 },
           },
           {
             name: 'And dst has more properties than src and an nested object',
             src: { a: { a1: 1, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
             dst: { a: { a1: 3 },  },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: { a1: 3, a2: 2 }, b: { b1: 'bbb', b2: 'ccc' } },
           },
         ],
@@ -368,17 +375,170 @@ testrun('copyProps', testfn, [
     ],
   },
   {
-    name: 'When only src, dst, map and isReversed are defined',
+    name: 'When src, dst and opts.rejectNull are defined',
     cases: [
       {
-        name: 'And isReversed is false',
+        name: 'And opts.rejectNull is true',
+        cases: [
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            opts: { rejectNull: true },
+            expected: {},
+          },
+          {
+            name: 'And dst is empty',
+            src: { a: 1, b: 'b', c: true, d: null, e: undefined, f: 0, g: '' },
+            dst: {},
+            opts: { rejectNull: true },
+            expected: { a: 1, b: 'b', c: true, f: 0, g: '' },
+          },
+          {
+            name: 'And dst is empty and src is a nested object',
+            src: {
+              a: { a1: 1, a2: 2, a3: 3, a4: true, a5: '', a6: null },
+              b: { b1: 'b1', b2: 'b2', b3: 0, b4: undefined },
+            },
+            dst: {},
+            opts: { rejectNull: true },
+            expected: {
+              a: { a1: 1, a2: 2, a3: 3, a4: true, a5: '' },
+              b: { b1: 'b1', b2: 'b2', b3: 0, },
+            },
+          },
+          {
+            name: 'And src and dst are same compositions',
+            src: { a: 1, b: null, c: true },
+            dst: { a: 2, b: 'x', c: false },
+            opts: { rejectNull: true },
+            expected: { a: 1, b: 'x', c: true },
+          },
+          {
+            name: 'And src is {} and dst is {}',
+            src: {},
+            dst: {},
+            opts: { reverse: true, rejectNull: true, },
+            expected: {},
+          },
+          {
+            name: 'And src is empty',
+            src: {},
+            dst: { a: 1, b: 'b', c: true, d: null, e: undefined, f: 0 },
+            opts: { reverse: true, rejectNull: true, },
+            expected: { a: 1, b: 'b', c: true, f: 0 },
+          },
+          {
+            name: 'And src is empty and dst is a nested object',
+            src: {},
+            dst: {
+              a: { a1: 1, a2: 2, a3: null },
+              b: { b1: 'b1', b2: undefined },
+            },
+            opts: { reverse: true, rejectNull: true, },
+            expected: {
+              a: { a1: 1, a2: 2 },
+              b: { b1: 'b1' },
+            },
+          },
+          {
+            name: 'And src and dst are same compositions',
+            src: { a: 2, b: 'x', c: false },
+            dst: { a: 1, b: null, c: true },
+            opts: { reverse: true, rejectNull: true, },
+            expected: { a: 1, b: 'x', c: true },
+          },
+        ],
+      },
+      {
+        name: 'And opts.rejectNull is false',
+        cases: [
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            opts: { rejectNull: false },
+            expected: {},
+          },
+          {
+            name: 'And dst is empty',
+            src: { a: 1, b: 'b', c: true, d: null, e: undefined, f: 0, g: '' },
+            dst: {},
+            opts: { rejectNull: false },
+            expected: {
+              a: 1, b: 'b', c: true, d: null, e: undefined,  f: 0, g: ''
+            },
+          },
+          {
+            name: 'And dst is empty and src is a nested object',
+            src: {
+              a: { a1: 1, a2: 2, a3: 3, a4: true, a5: '', a6: null },
+              b: { b1: 'b1', b2: 'b2', b3: 0, b4: undefined },
+            },
+            dst: {},
+            opts: { rejectNull: false },
+            expected: {
+              a: { a1: 1, a2: 2, a3: 3, a4: true, a5: '', a6: null },
+              b: { b1: 'b1', b2: 'b2', b3: 0, b4: undefined },
+            },
+          },
+          {
+            name: 'And src and dst are same compositions',
+            src: { a: 1, b: null, c: true },
+            dst: { a: 2, b: 'x', c: false },
+            opts: { rejectNull: false },
+            expected: { a: 1, b: null, c: true },
+          },
+          {
+            name: 'And src is {} and dst is {}',
+            src: {},
+            dst: {},
+            opts: { reverse: true, rejectNull: false, },
+            expected: {},
+          },
+          {
+            name: 'And src is empty',
+            src: {},
+            dst: { a: 1, b: 'b', c: true, d: null, e: undefined, f: 0 },
+            opts: { reverse: true, rejectNull: false, },
+            expected: { a: 1, b: 'b', c: true, d: null, e: undefined, f: 0 },
+          },
+          {
+            name: 'And src is empty and dst is a nested object',
+            src: {},
+            dst: {
+              a: { a1: 1, a2: 2, a3: null },
+              b: { b1: 'b1', b2: undefined },
+            },
+            opts: { reverse: true, rejectNull: false, },
+            expected: {
+              a: { a1: 1, a2: 2, a3: null, },
+              b: { b1: 'b1', b2: undefined, },
+            },
+          },
+          {
+            name: 'And src and dst are same compositions',
+            src: { a: 2, b: 'x', c: false },
+            dst: { a: 1, b: null, c: true },
+            opts: { reverse: true, rejectNull: false },
+            expected: { a: 1, b: null, c: true },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'When src, dst, map and opts.reverse are defined',
+    cases: [
+      {
+        name: 'And opts.reverse is false',
         cases: [
           {
             name: 'And both src and dst are empty',
             src: {},
             dst: {},
             map: { a: 'x.y.z', b: 'x.y.w' },
-            rev: false,
+            opts: { reverse: false },
             expected: {},
           },
           {
@@ -386,17 +546,17 @@ testrun('copyProps', testfn, [
             src: { a: { b1: 123, b2: 'BBB' }, c: true },
             dst: {},
             map: { 'a.b1': 'x.y.z', 'a.b2': 'x.v.w', c: 'o.p' },
-            rev: false,
+            opts: { reverse: false },
             expected: {
               x: { y: { z: 123 }, v: { w: 'BBB' } }, o: { p: true },
             },
           },
           {
-            name: 'And map does not contains any of src properties',
+            name: 'And map does not contains parts of src properties',
             src: { a: { b1: 123, b2: 'BBB' }, c: true },
             dst: {},
             map: { 'a.b1': 'x.y.z', c: 'o.p' },
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 123 }, }, o: { p: true } },
           },
           {
@@ -404,7 +564,7 @@ testrun('copyProps', testfn, [
             src: { a: { b1: 123, b2: 'BBB' }, c: true },
             dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             map: { 'a.b1': 'x.y.z', c: 'o.p' },
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 123 }, }, o: { p: true } },
           },
           {
@@ -412,7 +572,7 @@ testrun('copyProps', testfn, [
             src: { a: { b1: 123, b2: 'BBB' }, c: true },
             dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             map: { 'a.b1': 'x.y.w', },
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 999, w: 123 }, }, o: { p: 'a' } },
           },
           {
@@ -421,7 +581,7 @@ testrun('copyProps', testfn, [
             src: { a: {} },
             dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             map: { 'a.b1': 'x.y.z', c: 'o.p' },
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 999 }, }, o: { p: 'a' } },
           },
           {
@@ -429,20 +589,20 @@ testrun('copyProps', testfn, [
             src: { x: { y: { z: 123, zz: 'BBB' }, }, o: { p: true } },
             dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             map: ['x.y.z'],
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 123 }, }, o: { p: 'a' } },
           },
         ],
       },
       {
-        name: 'And isReversed is true',
+        name: 'And opts.reverse is true',
         cases: [
           {
             name: 'And both src and dst are empty',
             src: {},
             dst: {},
             map: { a: 'x.y.z', b: 'x.y.w' },
-            rev: true,
+            opts: { reverse: true },
             expected: {},
           },
           {
@@ -450,7 +610,7 @@ testrun('copyProps', testfn, [
             src: {},
             dst: { a: { b1: 123, b2: 'BBB' }, c: true },
             map: { 'x.y.z': 'a.b1', 'x.v.w': 'a.b2', 'o.p': 'c' },
-            rev: true,
+            opts: { reverse: true },
             expected: {
               x: { y: { z: 123 }, v: { w: 'BBB' } }, o: { p: true },
             },
@@ -460,7 +620,7 @@ testrun('copyProps', testfn, [
             src: {},
             dst: { a: { b1: 123, b2: 'BBB' }, c: true },
             map: { 'x.y.z': 'a.b1', 'o.p': 'c' },
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 123 }, }, o: { p: true } },
           },
           {
@@ -468,7 +628,7 @@ testrun('copyProps', testfn, [
             src: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             dst: { a: { b1: 123, b2: 'BBB' }, c: true },
             map: { 'x.y.z': 'a.b1', 'o.p': 'c' },
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 123 }, }, o: { p: true } },
           },
           {
@@ -476,7 +636,7 @@ testrun('copyProps', testfn, [
             src: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             dst: { a: { b1: 123, b2: 'BBB' }, c: true },
             map: { 'x.y.w': 'a.b1' },
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 999, w: 123 }, }, o: { p: 'a' } },
           },
           {
@@ -485,7 +645,7 @@ testrun('copyProps', testfn, [
             src: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             dst: { a: {} },
             map: { 'x.y.z': 'a.b1', 'o.p': 'c' },
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 999 }, }, o: { p: 'a' } },
           },
           {
@@ -493,7 +653,7 @@ testrun('copyProps', testfn, [
             src: { a: { b: { c: 'A', d: 'B' }, }, },
             dst: { x: { y: { z: 1234 }, }, },
             map: { 'a.b.c': 'x.y.z', 'a.b.d': 'x.y.z' },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: { b: { c: 1234, d: 1234, }, }, },
           },
           {
@@ -501,7 +661,7 @@ testrun('copyProps', testfn, [
             src: { x: { y: { z: 123, zz: 'BBB' }, }, o: { p: true } },
             dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
             map: ['x.y.z'],
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 999, zz: 'BBB' }, }, o: { p: true } },
           },
         ],
@@ -509,10 +669,146 @@ testrun('copyProps', testfn, [
     ],
   },
   {
-    name: 'When only src, dst, converter and isReversed are defined',
+    name: 'When src, dst, map and opts.rejectNull are defined',
     cases: [
       {
-        name: 'And isReversed is false',
+        name: 'And opts.rejectNull is true',
+        cases: [
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            map: { a: 'x.y.z', b: 'x.y.w' },
+            opts: { rejectNull: true },
+            expected: {},
+          },
+          {
+            name: 'And map contains all src properties',
+            src: { a: { b1: 123, b2: null }, c: undefined },
+            dst: {},
+            map: { 'a.b1': 'x.y.z', 'a.b2': 'x.v.w', c: 'o.p' },
+            opts: { rejectNull: true },
+            expected: {
+              x: { y: { z: 123 } },
+            },
+          },
+          {
+            name: 'And overwrite dst properties contained by map',
+            src: { a: { b1: null, b2: 'BBB' }, c: true },
+            dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
+            map: { 'a.b1': 'x.y.z', c: 'o.p' },
+            opts: { rejectNull: true },
+            expected: { x: { y: { z: 999 }, }, o: { p: true } },
+          },
+          {
+            name: 'And overwrite dst properties contained by map (array)',
+            src: { x: { y: { z: null, w: 2 }, }, o: { p: true } },
+            dst: { x: { y: { z: 999, w: 9 }, }, o: { p: 'a' } },
+            map: ['x.y.z', 'x.y.w', 'o.p'],
+            opts: { rejectNull: true },
+            expected: { x: { y: { z: 999, w: 2 }, }, o: { p: true } },
+          },
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            map: { a: 'x.y.z', b: 'x.y.w' },
+            opts: { reverse: true, rejectNull: true },
+            expected: {},
+          },
+          {
+            name: 'And map contains all dst properties',
+            src: {},
+            dst: { a: { b1: 123, b2: null }, c: true },
+            map: { 'x.y.z': 'a.b1', 'x.v.w': 'a.b2', 'o.p': 'c' },
+            opts: { reverse: true, rejectNull: true },
+            expected: {
+              x: { y: { z: 123 } }, o: { p: true },
+            },
+          },
+          {
+            name: 'And overwrite dst properties contained by map',
+            src: { x: { y: { z: 999 }, }, o: { p: 'a' } },
+            dst: { a: { b1: null, b2: 'BBB' }, c: true },
+            map: { 'x.y.z': 'a.b1', 'o.p': 'c' },
+            opts: { reverse: true, rejectNull: true },
+            expected: { x: { y: { z: 999 }, }, o: { p: true } },
+          },
+          {
+            name: 'And overwrite dst properties contained by map (array)',
+            src: { x: { y: { z: 999, w: 9 }, }, o: { p: 'a' } },
+            dst: { x: { y: { z: null, w: 2 }, }, o: { p: true } },
+            map: ['x.y.z', 'x.y.w', 'o.p'],
+            opts: { reverse: true, rejectNull: true },
+            expected: { x: { y: { z: 999, w: 2 }, }, o: { p: true } },
+          },
+        ],
+      },
+      {
+        name: 'And opts.rejectNull is false',
+        cases: [
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            map: { a: 'x.y.z', b: 'x.y.w' },
+            opts: { rejectNull: false },
+            expected: {},
+          },
+          {
+            name: 'And map contains all src properties',
+            src: { a: { b1: 123, b2: null }, c: undefined },
+            dst: {},
+            map: { 'a.b1': 'x.y.z', 'a.b2': 'x.v.w', c: 'o.p' },
+            opts: { rejectNull: false },
+            expected: {
+              x: { y: { z: 123 }, v: { w: null } },
+              o: { p: undefined },
+            },
+          },
+          {
+            name: 'And overwrite dst properties contained by map',
+            src: { a: { b1: null, b2: 'BBB' }, c: true },
+            dst: { x: { y: { z: 999 }, }, o: { p: 'a' } },
+            map: { 'a.b1': 'x.y.z', c: 'o.p' },
+            opts: { rejectNull: false },
+            expected: { x: { y: { z: null }, }, o: { p: true } },
+          },
+          {
+            name: 'And both src and dst are empty',
+            src: {},
+            dst: {},
+            map: { a: 'x.y.z', b: 'x.y.w' },
+            opts: { reverse: true, rejectNull: false },
+            expected: {},
+          },
+          {
+            name: 'And map contains all dst properties',
+            src: {},
+            dst: { a: { b1: 123, b2: null }, c: true },
+            map: { 'x.y.z': 'a.b1', 'x.v.w': 'a.b2', 'o.p': 'c' },
+            opts: { reverse: true, rejectNull: false },
+            expected: {
+              x: { y: { z: 123 }, v: { w: null } }, o: { p: true },
+            },
+          },
+          {
+            name: 'And overwrite dst properties contained by map',
+            src: { x: { y: { z: 999 }, }, o: { p: 'a' } },
+            dst: { a: { b1: null, b2: 'BBB' }, c: true },
+            map: { 'x.y.z': 'a.b1', 'o.p': 'c' },
+            opts: { reverse: true, rejectNull: false, },
+            expected: { x: { y: { z: null }, }, o: { p: true } },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'When src, dst, converter and opts.reverse are defined',
+    cases: [
+      {
+        name: 'And opts.reverse is false',
         cases: [
           {
             name: 'And covert all of src property values',
@@ -521,7 +817,7 @@ testrun('copyProps', testfn, [
             fn: function(value) {
               return value * 2;
             },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 2, b: { c: 4, d: 6 } },
           },
           {
@@ -537,13 +833,13 @@ testrun('copyProps', testfn, [
                 return value * 10;
               }
             },
-            rev: false,
+            opts: { reverse: false },
             expected: { a: 2, b: { c: 'x', d: 30 } },
           },
         ],
       },
       {
-        name: 'And isReversed is true',
+        name: 'And opts.reverse is true',
         cases: [
           {
             name: 'And covert all of src property values',
@@ -552,7 +848,7 @@ testrun('copyProps', testfn, [
             fn: function(value) {
               return value * 2;
             },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 2, b: { c: 4, d: 6 } },
           },
           {
@@ -568,8 +864,63 @@ testrun('copyProps', testfn, [
                 return value * 10;
               }
             },
-            rev: true,
+            opts: { reverse: true },
             expected: { a: 2, b: { c: 'x', d: 30 } },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'When src, dst, converter and opts.rejectNull are defined',
+    cases: [
+      {
+        name: 'And opts.rejectNull is true',
+        cases: [
+          {
+            name: 'And covert all of src property values',
+            src: { a: 1, b: { c: -2, d: 3 } },
+            dst: {},
+            fn: function(value) {
+              return (value < 0) ? null : value * 2;
+            },
+            opts: { rejectNull: true },
+            expected: { a: 2, b: { d: 6 } },
+          },
+          {
+            name: 'And covert all of src property values',
+            src: {},
+            dst: { a: 1, b: { c: -2, d: 3 } },
+            fn: function(value) {
+              return (value < 0) ? null : value * 2;
+            },
+            opts: { reverse: true, rejectNull: true },
+            expected: { a: 2, b: { d: 6 } },
+          },
+        ],
+      },
+      {
+        name: 'And opts.rejectNull is false',
+        cases: [
+          {
+            name: 'And covert all of src property values',
+            src: { a: 1, b: { c: -2, d: 3 } },
+            dst: {},
+            fn: function(value) {
+              return (value < 0) ? null : value * 2;
+            },
+            opts: { rejectNull: false },
+            expected: { a: 2, b: { c: null, d: 6 } },
+          },
+          {
+            name: 'And covert all of src property values',
+            src: {},
+            dst: { a: 1, b: { c: -2, d: 3 } },
+            fn: function(value) {
+              return (value < 0) ? null : value * 2;
+            },
+            opts: { reverse: true, rejectNull: false },
+            expected: { a: 2, b: { c: null, d: 6 } },
           },
         ],
       },
@@ -598,10 +949,10 @@ testrun('copyProps', testfn, [
     ],
   },
   {
-    name: 'When only src, dst, map, converter and isReversed are defined',
+    name: 'When src, dst, map, converter and opts.reverse are defined',
     cases: [
       {
-        name: 'And isReversed is false',
+        name: 'And opts.reverse is false',
         cases: [
           {
             name: 'And convert and copy to mapped properties',
@@ -618,13 +969,13 @@ testrun('copyProps', testfn, [
                 }
               }
             },
-            rev: false,
+            opts: { reverse: false },
             expected: { x: { y: { z: 10, w: 'CCC' }, u: { v: 'DDD' } } },
           },
         ],
       },
       {
-        name: 'And isReversed is true',
+        name: 'And opts.reverse is true',
         cases: [
           {
             name: 'And convert and copy to mapped properties',
@@ -641,8 +992,98 @@ testrun('copyProps', testfn, [
                 }
               }
             },
-            rev: true,
+            opts: { reverse: true },
             expected: { x: { y: { z: 10, w: 'CCC' }, u: { v: 'DDD' } } },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'When src, dst, map, converter and opts.rejectNull are defined',
+    cases: [
+      {
+        name: 'And opts.rejectNull is true',
+        cases: [
+          {
+            name: 'And convert and copy to mapped properties',
+            src: { a: 1, b: { c: null, d: 'ddd' }, },
+            dst: { x: { y: { z: '-', w: '?' }, }, },
+            map: { a: 'x.y.z', 'b.c': 'x.y.w', 'b.d': 'x.u.v', },
+            fn: function(value) {
+              switch (typeof value) {
+                case 'number': {
+                  return value * 10;
+                }
+                case 'string': {
+                  return value.toUpperCase();
+                }
+              }
+            },
+            opts: { reverse: false },
+            expected: { x: { y: { z: 10, w: '?' }, u: { v: 'DDD' } } },
+          },
+          {
+            name: 'And convert and copy to mapped properties',
+            src: { x: { y: { z: '-', w: '?' }, }, },
+            dst: { a: 1, b: { c: null, d: 'ddd' }, },
+            map: { 'x.y.z': 'a', 'x.y.w': 'b.c', 'x.u.v': 'b.d', },
+            fn: function(value) {
+              switch (typeof value) {
+                case 'number': {
+                  return value * 10;
+                }
+                case 'string': {
+                  return value.toUpperCase();
+                }
+              }
+            },
+            opts: { reverse: true, rejectNull: true },
+            expected: { x: { y: { z: 10, w: '?' }, u: { v: 'DDD' } } },
+          },
+        ],
+      },
+      {
+        name: 'And opts.rejectNull is false',
+        cases: [
+          {
+            name: 'And convert and copy to mapped properties',
+            src: { a: 1, b: { c: null, d: 'ddd' }, },
+            dst: { x: { y: { z: '-', w: '?' }, }, },
+            map: { a: 'x.y.z', 'b.c': 'x.y.w', 'b.d': 'x.u.v', },
+            fn: function(value) {
+              switch (typeof value) {
+                case 'number': {
+                  return value * 10;
+                }
+                case 'string': {
+                  return value.toUpperCase();
+                }
+              }
+            },
+            opts: { reverse: false, rejectNull: false },
+            expected: { x: { y: { z: 10, w: undefined }, u: { v: 'DDD' } } },
+          },
+          {
+            name: 'And convert and copy to mapped properties',
+            src: { x: { y: { z: '-', w: '?' }, }, },
+            dst: { a: 1, b: { c: null, d: 'ddd' }, },
+            map: { 'x.y.z': 'a', 'x.y.w': 'b.c', 'x.u.v': 'b.d', },
+            fn: function(value) {
+              switch (typeof value) {
+                case 'number': {
+                  return value * 10;
+                }
+                case 'string': {
+                  return value.toUpperCase();
+                }
+                default: {
+                  return null;
+                }
+              }
+            },
+            opts: { reverse: true, rejectNull: false },
+            expected: { x: { y: { z: 10, w: null }, u: { v: 'DDD' } } },
           },
         ],
       },
