@@ -1,170 +1,160 @@
 'use strict';
 
-/* eslint max-statements: "off" */
-
-var inspect = require('util').inspect;
-var isPlainObject = require('lodash.isplainobject');
 var eachProps = require('each-props');
-var setDeep = require('lodash.set');
+var isPlainObject = require('is-plain-object');
 
 module.exports = function(src, dst, fromto, converter, reverse) {
+
   if (!isPlainObject(src)) {
-    throw new TypeError('The source needs to be a plain object: ' +
-      inspect(src));
+    src = {};
   }
 
   if (!isPlainObject(dst)) {
-    throw new TypeError('The destination needs to be a plain object: ' +
-      inspect(dst));
+    dst = {};
   }
 
-  switch (typeof fromto) {
-    case 'boolean': {
-      reverse = fromto;
-      converter = noop;
-      fromto = undefined;
-      break;
-    }
-    case 'function': {
-      reverse = converter;
-      converter = fromto;
-      fromto = undefined;
-      break;
-    }
-    default: {
-      if (fromto == null) {
-        /*fromto = fromto;*/
-      } else if (isPlainObject(fromto)) {
-        /*fromto = fromto;*/
-      } else if (Array.isArray(fromto)) {
-        fromto = arrayToMap(fromto);
-      } else {
-        throw new TypeError('The from-to map needs to be a plain object: ' +
-          inspect(fromto));
-      }
-      break;
-    }
+  if (isPlainObject(fromto)) {
+    fromto = onlyValueIsString(fromto);
+  } else if (Array.isArray(fromto)) {
+    fromto = arrayToObject(fromto);
+  } else if (typeof fromto === 'boolean') {
+    reverse = fromto;
+    converter = noop;
+    fromto = null;
+  } else if (typeof fromto === 'function') {
+    reverse = converter;
+    converter = fromto;
+    fromto = null;
+  } else {
+    fromto = null;
   }
 
-  switch (typeof converter) {
-    case 'function': {
-      break;
-    }
-    case 'boolean': {
+  if (typeof converter !== 'function') {
+    if (typeof converter === 'boolean') {
       reverse = converter;
       converter = noop;
-      break;
-    }
-    default: {
-      if (converter == null) {
-        converter = noop;
-      } else {
-        throw new TypeError('The converter needs to be a function: ' +
-          inspect(converter));
-      }
+    } else {
+      converter = noop;
     }
   }
 
-  switch (typeof reverse) {
-    case 'boolean': {
-      break;
-    }
-    default: {
-      if (reverse == null) {
-        reverse = false;
-      } else {
-        throw new TypeError('The reverse flag needs to be a boolean: ' +
-          inspect(reverse));
-      }
+  if (typeof reverse !== 'boolean') {
+    reverse = false;
+  }
+
+  if (reverse) {
+    var tmp = src;
+    src = dst;
+    dst = tmp;
+
+    if (fromto) {
+      fromto = invert(fromto);
     }
   }
 
-  return copyProps(src, dst, fromto, converter, reverse);
+  var opts = {
+    dest: dst,
+    fromto: fromto,
+    convert: converter,
+  };
+
+  if (fromto) {
+    eachProps(src, copyWithFromto, opts);
+  } else {
+    eachProps(src, copyWithoutFromto, opts);
+  }
+
+  return dst;
 };
+
+function copyWithFromto(value, keyChain, nodeInfo) {
+  if (isPlainObject(value)) {
+    return;
+  }
+
+  var dstKeyChains = nodeInfo.fromto[keyChain];
+  if (!dstKeyChains) {
+    return;
+  }
+
+  if (!Array.isArray(dstKeyChains)) {
+    dstKeyChains = [dstKeyChains];
+  }
+
+  for (var i = 0, n = dstKeyChains.length; i < n; i++) {
+    var dstValue = nodeInfo.convert(value, keyChain, dstKeyChains[i]);
+    if (dstValue !== undefined) {
+      setDeep(nodeInfo.dest, dstKeyChains[i], dstValue);
+    }
+  }
+}
+
+function copyWithoutFromto(value, keyChain, nodeInfo) {
+  if (isPlainObject(value)) {
+    for (var k in value) {
+      return;
+    }
+    setDeep(nodeInfo.dest, keyChain, {});
+    return;
+  }
+
+  var dstValue = nodeInfo.convert(value, keyChain, keyChain);
+  if (dstValue !== undefined) {
+    setDeep(nodeInfo.dest, keyChain, dstValue);
+  }
+}
 
 function noop(v) {
   return v;
 }
 
+function onlyValueIsString(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    var val = obj[key];
+    if (typeof val === 'string') {
+      newObj[key] = val;
+    }
+  }
+  return newObj;
+}
+
+function arrayToObject(arr) {
+  var obj = {};
+  for (var i = 0, n = arr.length; i < n; i++) {
+    var elm = arr[i];
+    if (typeof elm === 'string') {
+      obj[elm] = elm;
+    }
+  }
+  return obj;
+}
+
 function invert(fromto) {
-  var inverted = {};
-  var keys = Object.keys(fromto);
-  for (var i = 0, n = keys.length; i < n; i++) {
-    var key = keys[i];
+  var inv = {};
+  for (var key in fromto) {
     var val = fromto[key];
-    if (!inverted[val]) {
-      inverted[val] = [];
+    if (!inv[val]) {
+      inv[val] = [];
     }
-    inverted[val].push(key);
+    inv[val].push(key);
   }
-  return inverted;
+  return inv;
 }
 
-function arrayToMap(array) {
-  var map = {};
-  for (var i = 0, n = array.length; i < n; i++) {
-    map[array[i]] = array[i];
-  }
-  return map;
+function setDeep(obj, keyChain, value) {
+  _setDeep(obj, keyChain.split('.'), value);
 }
 
-function copyProps(src, dst, fromto, converter, reverse) {
-  if (reverse) {
-    var tmp = src;
-    src = dst;
-    dst = tmp;
+function _setDeep(obj, keyElems, value) {
+  var key = keyElems.shift();
+  if (!keyElems.length) {
+    obj[key] = value;
+    return;
   }
 
-  if (isPlainObject(fromto)) {
-    if (reverse) {
-      fromto = invert(fromto);
-
-      eachProps(src, function(value, keychain, opts) {
-        if (isPlainObject(value)) {
-          return;
-        }
-        var dstKeychains = fromto[keychain];
-        if (dstKeychains == null) {
-          return;
-        }
-        for (var i = 0, n = dstKeychains.length; i < n; i++) {
-          var dstValue = converter(value, keychain, dstKeychains[i], opts);
-          if (dstValue === undefined) {
-            return;
-          }
-          setDeep(dst, dstKeychains[i], dstValue);
-        }
-      });
-      return dst;
-    }
-
-    eachProps(src, function(value, keychain, opts) {
-      if (isPlainObject(value)) {
-        return;
-      }
-      var dstKeychain = fromto[keychain];
-      if (!dstKeychain) {
-        return;
-      }
-      var dstValue = converter(value, keychain, dstKeychain, opts);
-      if (dstValue === undefined) {
-        return;
-      }
-      setDeep(dst, dstKeychain, dstValue);
-    });
-    return dst;
-
-  } else {
-    eachProps(src, function(value, keychain, opts) {
-      if (isPlainObject(value)) {
-        return;
-      }
-      var dstValue = converter(value, keychain, keychain, opts);
-      if (dstValue === undefined) {
-        return;
-      }
-      setDeep(dst, keychain, dstValue);
-    });
-    return dst;
+  if (!isPlainObject(obj[key])) {
+    obj[key] = {};
   }
+  _setDeep(obj[key], keyElems, value);
 }
