@@ -61,6 +61,7 @@ module.exports = function(src, dst, fromto, converter, reverse) {
 
   if (fromto) {
     eachProps(src, copyWithFromto, opts);
+    setParentEmptyObject(dst, fromto);
   } else {
     eachProps(src, copyWithoutFromto, opts);
   }
@@ -77,6 +78,7 @@ function copyWithFromto(value, keyChain, nodeInfo) {
   if (!dstKeyChains) {
     return;
   }
+  delete nodeInfo.fromto[keyChain];
 
   if (!Array.isArray(dstKeyChains)) {
     dstKeyChains = [dstKeyChains];
@@ -100,9 +102,7 @@ function copyWithoutFromto(value, keyChain, nodeInfo) {
   }
 
   var dstValue = nodeInfo.convert(value, keyChain, keyChain);
-  if (dstValue !== undefined) {
-    setDeep(nodeInfo.dest, keyChain, dstValue);
-  }
+  setDeep(nodeInfo.dest, keyChain, dstValue);
 }
 
 function noop(v) {
@@ -150,7 +150,9 @@ function setDeep(obj, keyChain, value) {
 function _setDeep(obj, keyElems, value) {
   var key = keyElems.shift();
   if (!keyElems.length) {
-    obj[key] = value;
+    if (value !== undefined) {
+      obj[key] = value;
+    }
     return;
   }
 
@@ -158,6 +160,19 @@ function _setDeep(obj, keyElems, value) {
     obj[key] = {};
   }
   _setDeep(obj[key], keyElems, value);
+}
+
+function setParentEmptyObject(obj, fromto) {
+  for (var srcKeyChain in fromto) {
+    var dstKeyChains = fromto[srcKeyChain];
+    if (!Array.isArray(dstKeyChains)) {
+      dstKeyChains = [dstKeyChains];
+    }
+
+    for (var i = 0, n = dstKeyChains.length; i < n; i++) {
+      setDeep(obj, dstKeyChains[i], undefined);
+    }
+  }
 }
 
 },{"each-props":38,"is-plain-object":40}],2:[function(require,module,exports){
@@ -8863,6 +8878,28 @@ describe('Processing', function() {
       done();
     });
 
+    it('Should copy properties until parent object if value is undefined',
+    function(done) {
+      var src = {
+        a: undefined,
+        b: { c: undefined },
+        e: { f: { g: undefined } },
+        h: {},
+        i: { j: {} },
+      };
+      var dst = {};
+      var result = copyProps(src, dst);
+      var expected = { b: {}, e: { f: {} }, h: {}, i: { j: {} } };
+      expect(result).to.deep.equal(expected);
+      expect(result.a).to.be.undefined;
+      expect(result.b.c).to.be.undefined;
+      expect(result.b.d).to.be.undefined;
+      expect(result.e.f.g).to.be.undefined;
+      expect(result.h.xxx).to.be.undefined;
+      expect(result.i.j.yyy).to.be.undefined;
+      done();
+    });
+
   });
 
   describe('About fromto special cases', function() {
@@ -8934,6 +8971,21 @@ describe('Processing', function() {
       var result = copyProps(src, dst, fromto);
       var expected = { a: 1 };
       expect(result).to.deep.equal(expected);
+      done();
+    });
+
+    it('Should copy properties until parent object if value is undefined',
+    function(done) {
+      var src = {};
+      var dst = {};
+      var fromto = ['a', 'b.c', 'b.d', 'e.f.g'];
+      var result = copyProps(src, dst, fromto);
+      var expected = { b: {}, e: { f: {} } };
+      expect(result).to.deep.equal(expected);
+      expect(result.a).to.be.undefined;
+      expect(result.b.c).to.be.undefined;
+      expect(result.b.d).to.be.undefined;
+      expect(result.e.f.g).to.be.undefined;
       done();
     });
 

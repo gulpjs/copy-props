@@ -137,6 +137,28 @@ describe('Processing', function() {
       done();
     });
 
+    it('Should copy properties until parent object if value is undefined',
+    function(done) {
+      var src = {
+        a: undefined,
+        b: { c: undefined },
+        e: { f: { g: undefined } },
+        h: {},
+        i: { j: {} },
+      };
+      var dst = {};
+      var result = copyProps(src, dst);
+      var expected = { b: {}, e: { f: {} }, h: {}, i: { j: {} } };
+      expect(result).to.deep.equal(expected);
+      expect(result.a).to.be.undefined;
+      expect(result.b.c).to.be.undefined;
+      expect(result.b.d).to.be.undefined;
+      expect(result.e.f.g).to.be.undefined;
+      expect(result.h.xxx).to.be.undefined;
+      expect(result.i.j.yyy).to.be.undefined;
+      done();
+    });
+
   });
 
   describe('About fromto special cases', function() {
@@ -208,6 +230,21 @@ describe('Processing', function() {
       var result = copyProps(src, dst, fromto);
       var expected = { a: 1 };
       expect(result).to.deep.equal(expected);
+      done();
+    });
+
+    it('Should copy properties until parent object if value is undefined',
+    function(done) {
+      var src = {};
+      var dst = {};
+      var fromto = ['a', 'b.c', 'b.d', 'e.f.g'];
+      var result = copyProps(src, dst, fromto);
+      var expected = { b: {}, e: { f: {} } };
+      expect(result).to.deep.equal(expected);
+      expect(result.a).to.be.undefined;
+      expect(result.b.c).to.be.undefined;
+      expect(result.b.d).to.be.undefined;
+      expect(result.e.f.g).to.be.undefined;
       done();
     });
 
