@@ -86,9 +86,7 @@ function copyWithFromto(value, keyChain, nodeInfo) {
 
   for (var i = 0, n = dstKeyChains.length; i < n; i++) {
     var dstValue = nodeInfo.convert(value, keyChain, dstKeyChains[i]);
-    if (dstValue !== undefined) {
-      setDeep(nodeInfo.dest, dstKeyChains[i], dstValue);
-    }
+    setDeep(nodeInfo.dest, dstKeyChains[i], dstValue);
   }
 }
 
@@ -8105,38 +8103,42 @@ module.exports = function(obj, fn, opts) {
     return;
   }
 
-  var nodeInfo = isPlainObject(opts) ? objectAssign({}, opts) : {};
-  nodeInfo.depth = 0;
+  if (!isPlainObject(opts)) {
+    opts = {};
+  }
 
-  forEachChild(obj, '', fn, nodeInfo);
+  forEachChild(obj, '', fn, 0, opts);
 };
 
-function forEachChild(node, baseKey, fn, nodeInfo) {
+function forEachChild(node, baseKey, fn, depth, opts) {
   var keys = Object.keys(node);
-  if (typeof nodeInfo.sort === 'function') {
-    var sortedKeys = nodeInfo.sort(keys);
+  if (typeof opts.sort === 'function') {
+    var sortedKeys = opts.sort(keys);
     if (Array.isArray(sortedKeys)) {
       keys = sortedKeys;
     }
   }
+
+  depth += 1;
 
   for (var i = 0, n = keys.length; i < n; i++) {
     var key = keys[i];
     var keyChain = baseKey + '.' + key;
     var value = node[key];
 
-    var childInfo = objectAssign({}, nodeInfo);
-    childInfo.index = i;
-    childInfo.count = n;
-    childInfo.depth = nodeInfo.depth + 1;
-    childInfo.parent = node;
+    var nodeInfo = objectAssign({}, opts);
+    nodeInfo.name = key;
+    nodeInfo.index = i;
+    nodeInfo.count = n;
+    nodeInfo.depth = depth;
+    nodeInfo.parent = node;
 
-    var notDigg = fn(value, keyChain.slice(1), childInfo);
+    var notDigg = fn(value, keyChain.slice(1), nodeInfo);
     if (notDigg || !isPlainObject(value)) {
       continue;
     }
 
-    forEachChild(value, keyChain, fn, childInfo);
+    forEachChild(value, keyChain, fn, depth, opts);
   }
 }
 
