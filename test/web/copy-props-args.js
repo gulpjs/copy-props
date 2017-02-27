@@ -1,7 +1,7 @@
 'use strict';
 
-var copyProps = require('..');
-var chai = require('chai');
+
+
 var expect = chai.expect;
 
 /* eslint max-statements: "off", brace-style: "off" */

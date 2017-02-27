@@ -11,7 +11,7 @@
     "test": "mocha",
     "coverage": "istanbul cover _mocha",
     "coveralls": "istanbul cover _mocha && istanbul-coveralls",
-    "web:build": "browserify index.js | uglifyjs --compress --mangle -o web/copy-props.js && browserify -o test/web/copy-props.test.js test/*.js",
+    "web:build": "browserify index.js --standalone copyProps | uglifyjs --compress --mangle -o web/copy-props.js && node test/web/make.js",
     "web:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/copy-props.test.html"
   },
   "repository": {
