@@ -146,16 +146,18 @@ copyProps(src, dst, {
 
 #### *API of converter*
 
-**<u>converter(value, keychain) => any</u>**
+**<u>converter(srcValue, srcKeychain, dstKeyChain, dstValue) => any</u>**
 
 *converter* is a function to convert terminal values of propeerties of *src*.
 
 * **Arguments:**
 
-    * **value** [any] : a property value to be converted.
-    * **keychain** [string] : a string of property keys concatenated with dots.
+    * **srcValue** [any] : a source property value to be converted.
+    * **srcKeychain** [string] : a source property key string concatenated with dots.
+    * **dstKeychain** [string] : a destination property key string concatenated with dots.
+    * **dstValue** [any] : a destination property value before copying.
 
-* **Return:** [any] : converted value.
+* **Return:** [any] : converted value to be set as a destination property value.
 
 License
 -------

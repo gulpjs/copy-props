@@ -84,8 +84,9 @@ function copyWithFromto(value, keyChain, nodeInfo) {
   }
 
   for (var i = 0, n = dstKeyChains.length; i < n; i++) {
-    var dstValue = nodeInfo.convert(value, keyChain, dstKeyChains[i]);
-    setDeep(nodeInfo.dest, dstKeyChains[i], dstValue);
+    setDeep(nodeInfo.dest, dstKeyChains[i], function(dstValue) {
+      return nodeInfo.convert(value, keyChain, dstKeyChains[i], dstValue);
+    });
   }
 }
 
@@ -94,12 +95,17 @@ function copyWithoutFromto(value, keyChain, nodeInfo) {
     for (var k in value) {
       return;
     }
-    setDeep(nodeInfo.dest, keyChain, {});
+    setDeep(nodeInfo.dest, keyChain, newObject);
     return;
   }
 
-  var dstValue = nodeInfo.convert(value, keyChain, keyChain);
-  setDeep(nodeInfo.dest, keyChain, dstValue);
+  setDeep(nodeInfo.dest, keyChain, function(dstValue) {
+    return nodeInfo.convert(value, keyChain, keyChain, dstValue);
+  });
+}
+
+function newObject() {
+  return {};
 }
 
 function noop(v) {
@@ -140,13 +146,14 @@ function invert(fromto) {
   return inv;
 }
 
-function setDeep(obj, keyChain, value) {
-  _setDeep(obj, keyChain.split('.'), value);
+function setDeep(obj, keyChain, valueCreator) {
+  _setDeep(obj, keyChain.split('.'), valueCreator);
 }
 
-function _setDeep(obj, keyElems, value) {
+function _setDeep(obj, keyElems, valueCreator) {
   var key = keyElems.shift();
   if (!keyElems.length) {
+    var value = valueCreator(obj[key]);
     if (value !== undefined) {
       obj[key] = value;
     }
@@ -156,7 +163,7 @@ function _setDeep(obj, keyElems, value) {
   if (!isPlainObject(obj[key])) {
     obj[key] = {};
   }
-  _setDeep(obj[key], keyElems, value);
+  _setDeep(obj[key], keyElems, valueCreator);
 }
 
 function setParentEmptyObject(obj, fromto) {
@@ -167,7 +174,11 @@ function setParentEmptyObject(obj, fromto) {
     }
 
     for (var i = 0, n = dstKeyChains.length; i < n; i++) {
-      setDeep(obj, dstKeyChains[i], undefined);
+      setDeep(obj, dstKeyChains[i], newUndefined);
     }
   }
+}
+
+function newUndefined() {
+  return undefined;
 }

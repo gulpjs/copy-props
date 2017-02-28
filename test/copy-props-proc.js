@@ -254,13 +254,43 @@ describe('Processing', function() {
   describe('About patterns of converter returns', function() {
 
     it('When converter returns undefined', function(done) {
-      var src = { a: 1, b: { c: 2, d: 3 } };
-      var dst = {};
-      function fn(value, keyChain) {
+      var src = { a: 1, b: { c: 2, d: 3, e: 4 } };
+      var dst = { a: 'A', b: { e: 'E' } };
+      function fn(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal(1);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('A');
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal(2);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal(3);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          case 'b.e': {
+            expect(value).to.equal(4);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('E');
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         return (keyChain === 'b.c') ? undefined : value;
       }
       var result = copyProps(src, dst, fn);
-      var expected = { a: 1, b: { d: 3 } };
+      var expected = { a: 1, b: { d: 3, e: 4 } };
       expect(result).to.deep.equal(expected);
       done();
     });
@@ -268,7 +298,31 @@ describe('Processing', function() {
     it('When converter returns null', function(done) {
       var src = { a: 1, b: { c: 2, d: 3 } };
       var dst = {};
-      function fn(value, keyChain) {
+      function fn(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal(1);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal(2);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal(3);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         return (keyChain === 'b.c') ? null : value;
       }
       var result = copyProps(src, dst, fn);
@@ -297,7 +351,31 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(value, keyChain) {
+      var converter = function(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal('A');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(1);
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal('C');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(2);
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal('D');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(3);
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         if (keyChain === 'b.c') {
           return undefined;
         } else {
@@ -311,7 +389,37 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(value, keyChain) {
+      converter = function(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal('A');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(1);
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal('C');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(2);
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal('D');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal(3);
+            break;
+          }
+          case 'b.e': {
+            expect(value).to.equal('E');
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.be.undefined;
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         if (keyChain === 'b.c') {
           return undefined;
         } else {
@@ -340,7 +448,31 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(value, keyChain) {
+      var converter = function(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal(1);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('A');
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal(2);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('C');
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal(3);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('D');
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         if (keyChain === 'b.c') {
           return undefined;
         } else {
@@ -354,7 +486,37 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(value, keyChain) {
+      converter = function(value, keyChain, dstKeyChain, dstValue) {
+        switch (keyChain) {
+          case 'a': {
+            expect(value).to.equal(1);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('A');
+            break;
+          }
+          case 'b.c': {
+            expect(value).to.equal(2);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('C');
+            break;
+          }
+          case 'b.d': {
+            expect(value).to.equal(3);
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('D');
+            break;
+          }
+          case 'b.e': {
+            expect(value).to.be.undefined;
+            expect(dstKeyChain).to.equal(keyChain);
+            expect(dstValue).to.equal('E');
+            break;
+          }
+          default: {
+            expect(true).to.not.be.true;
+            break;
+          }
+        }
         if (keyChain === 'b.c') {
           return undefined;
         } else {
