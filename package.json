@@ -1,6 +1,6 @@
 {
   "name": "copy-props",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Copy properties deeply between two objects.",
   "main": "index.js",
   "files": [
@@ -11,6 +11,7 @@
     "test": "mocha",
     "coverage": "istanbul cover _mocha",
     "coveralls": "istanbul cover _mocha && istanbul-coveralls",
+    "web:install": "npm i phantomjs-prebuilt mocha-phantomjs",
     "web:build": "browserify index.js --standalone copyProps | uglifyjs --compress --mangle -o web/copy-props.js && node test/web/make.js",
     "web:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/copy-props.test.html"
   },
@@ -33,18 +34,16 @@
   },
   "homepage": "https://github.com/sttk/copy-props#readme",
   "dependencies": {
-    "each-props": "^1.1.0",
+    "each-props": "^1.2.1",
     "is-plain-object": "^2.0.1"
   },
   "devDependencies": {
-    "browserify": "^13.3.0",
+    "browserify": "^14.1.0",
     "chai": "^3.5.0",
-    "eslint": "^3.6.1",
+    "eslint": "^3.16.1",
     "istanbul": "^0.4.5",
     "istanbul-coveralls": "^1.0.3",
-    "mocha": "^3.1.0",
-    "mocha-phantomjs": "^4.1.0",
-    "phantomjs": "^2.1.7",
-    "uglify-js": "^2.7.5"
+    "mocha": "^3.2.0",
+    "uglify-js": "^2.8.1"
   }
 }
