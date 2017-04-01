@@ -256,30 +256,34 @@ describe('Processing', function() {
     it('When converter returns undefined', function(done) {
       var src = { a: 1, b: { c: 2, d: 3, e: 4 } };
       var dst = { a: 'A', b: { e: 'E' } };
-      function fn(value, keyChain, dstKeyChain, dstValue) {
+      function fn(value, keyChain, dstKeyChain, dstValue, dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal(1);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('A');
+            expect(dstParent).to.equal(dst);
             break;
           }
           case 'b.c': {
             expect(value).to.equal(2);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal(3);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.e': {
             expect(value).to.equal(4);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('E');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           default: {
@@ -298,24 +302,27 @@ describe('Processing', function() {
     it('When converter returns null', function(done) {
       var src = { a: 1, b: { c: 2, d: 3 } };
       var dst = {};
-      function fn(value, keyChain, dstKeyChain, dstValue) {
+      function fn(value, keyChain, dstKeyChain, dstValue, dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal(1);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(dst);
             break;
           }
           case 'b.c': {
             expect(value).to.equal(2);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal(3);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           default: {
@@ -351,24 +358,28 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(value, keyChain, dstKeyChain, dstValue) {
+      var converter = function(value, keyChain, dstKeyChain, dstValue,
+          dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal('A');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(1);
+            expect(dstParent).to.equal(src);
             break;
           }
           case 'b.c': {
             expect(value).to.equal('C');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(2);
+            expect(dstParent).to.equal(src.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal('D');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(3);
+            expect(dstParent).to.equal(src.b);
             break;
           }
           default: {
@@ -389,30 +400,34 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(value, keyChain, dstKeyChain, dstValue) {
+      converter = function(value, keyChain, dstKeyChain, dstValue, dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal('A');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(1);
+            expect(dstParent).to.equal(src);
             break;
           }
           case 'b.c': {
             expect(value).to.equal('C');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(2);
+            expect(dstParent).to.equal(src.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal('D');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal(3);
+            expect(dstParent).to.equal(src.b);
             break;
           }
           case 'b.e': {
             expect(value).to.equal('E');
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.be.undefined;
+            expect(dstParent).to.equal(src.b);
             break;
           }
           default: {
@@ -448,24 +463,28 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(value, keyChain, dstKeyChain, dstValue) {
+      var converter = function(value, keyChain, dstKeyChain, dstValue,
+          dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal(1);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('A');
+            expect(dstParent).to.equal(dst);
             break;
           }
           case 'b.c': {
             expect(value).to.equal(2);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('C');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal(3);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('D');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           default: {
@@ -486,30 +505,34 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(value, keyChain, dstKeyChain, dstValue) {
+      converter = function(value, keyChain, dstKeyChain, dstValue, dstParent) {
         switch (keyChain) {
           case 'a': {
             expect(value).to.equal(1);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('A');
+            expect(dstParent).to.equal(dst);
             break;
           }
           case 'b.c': {
             expect(value).to.equal(2);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('C');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.d': {
             expect(value).to.equal(3);
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('D');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           case 'b.e': {
             expect(value).to.be.undefined;
             expect(dstKeyChain).to.equal(keyChain);
             expect(dstValue).to.equal('E');
+            expect(dstParent).to.equal(dst.b);
             break;
           }
           default: {

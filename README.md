@@ -109,6 +109,27 @@ Usage
     // => { a: 'A', b: 'b', c: null }
     ```
 
+* You can operate the parent node object directly in converter.
+
+    ```js
+    var src = { a: 1, b: 2 };
+    var dst = {};
+
+    copyProps(src, dst, function(srcval, srckey, dstkey, dstval, dstParent) {
+      var key = dstkey.split('.').pop();
+      Object.defineProperty(dstParent, key, {
+        writable: false,
+        enumerable: true,
+        configurable: false,
+        value: srcval * 2
+      })
+    }); // => { a: 2, b: 4 }
+
+    dst // => { a: 2, b: 4 }
+    dst.a = 9
+    dst // -> { a: 2, b: 4 }
+    ```
+
 API
 ---
 
@@ -145,7 +166,7 @@ copyProps(src, dst, {
 
 #### *API of converter*
 
-**<u>converter(srcValue, srcKeychain, dstKeyChain, dstValue) => any</u>**
+**<u>converter(srcValue, srcKeychain, dstKeyChain, dstValue, dstParent) => any</u>**
 
 *converter* is a function to convert terminal values of propeerties of *src*.
 
@@ -155,8 +176,9 @@ copyProps(src, dst, {
     * **srcKeychain** [string] : a source property key string concatenated with dots.
     * **dstKeychain** [string] : a destination property key string concatenated with dots.
     * **dstValue** [any] : a destination property value before copying.
+    * **dstParent** [object] : the destination node object which has the copied property.
 
-* **Return:** [any] : converted value to be set as a destination property value.
+* **Return:** [any] : converted value to be set as a destination property value. If this value is undefined, the destination property is not set to the destination node object.
 
 License
 -------

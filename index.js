@@ -84,8 +84,9 @@ function copyWithFromto(value, keyChain, nodeInfo) {
   }
 
   for (var i = 0, n = dstKeyChains.length; i < n; i++) {
-    setDeep(nodeInfo.dest, dstKeyChains[i], function(dstValue) {
-      return nodeInfo.convert(value, keyChain, dstKeyChains[i], dstValue);
+    setDeep(nodeInfo.dest, dstKeyChains[i], function(dstValue, dstParent) {
+      return nodeInfo.convert(value, keyChain, dstKeyChains[i], dstValue,
+        dstParent);
     });
   }
 }
@@ -99,8 +100,8 @@ function copyWithoutFromto(value, keyChain, nodeInfo) {
     return;
   }
 
-  setDeep(nodeInfo.dest, keyChain, function(dstValue) {
-    return nodeInfo.convert(value, keyChain, keyChain, dstValue);
+  setDeep(nodeInfo.dest, keyChain, function(dstValue, dstParent) {
+    return nodeInfo.convert(value, keyChain, keyChain, dstValue, dstParent);
   });
 }
 
@@ -153,7 +154,7 @@ function setDeep(obj, keyChain, valueCreator) {
 function _setDeep(obj, keyElems, valueCreator) {
   var key = keyElems.shift();
   if (!keyElems.length) {
-    var value = valueCreator(obj[key]);
+    var value = valueCreator(obj[key], obj);
     if (value !== undefined) {
       obj[key] = value;
     }
