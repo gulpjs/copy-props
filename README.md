@@ -37,8 +37,8 @@ Usage
 
     copyProps(src, dst, {
       a: 'f.a',
-      'b.b1': 'f.b.b1',
-      'b.b2': 'f.b.b2',
+      'b.b1': 'f.b1',
+      'b.b2': 'f.b2',
       'c': 'f.c',
     });
     // => { f: { a: 1, b1: 'bbb', b2: 'yyy', c: 'ccc' }, e: 'zzz' }
@@ -66,9 +66,9 @@ Usage
     ```js
     var src = { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } };
     var dst = { a: 9, b: { c: 'xxx' }, d: { e: 'yyy' } };
-    var fromto = [ 'a.b.c', 'd.e' ];
+    var fromto = [ 'b.c', 'd.e' ];
     copyProps(src, dst, fromto);
-    // => { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } }
+    // => { a: 9, b: { c: 'CCC' }, d: { e: 'EEE' } }
     ```
 
 * Can copy reversively (from *dst* to *src*) by reverse flag (and return *src*):
@@ -87,7 +87,6 @@ Usage
 
     copyProps(src, dst, {
       a: 'f.a',
-      'b.b1': 'f.b1',
       'b.b2': 'f.b2',
       'c': 'f.c',
     }, true);
