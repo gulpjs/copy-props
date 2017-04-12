@@ -50,12 +50,12 @@ Usage
     var src = { a: 1, b: { b1: 'bbb' } };
     var dst = { a: 0 };
 
-    copyProps(src, dst, function(value, keychain) {
-      if (keychain === 'a') {
-        return value * 2;
+    copyProps(src, dst, function(srcInfo) {
+      if (srcInfo.keyChain === 'a') {
+        return srcInfo.value * 2;
       }
-      if (keychain === 'b.b1') {
-        return value.toUpperCase();
+      if (srcInfo.keyChain === 'b.b1') {
+        return srcInfo.value.toUpperCase();
       }
     });
     // => { a: 2, b: { b1: 'BBB' } }
@@ -99,11 +99,11 @@ Usage
     var src = { a: 'A', b: undefined, c: null, d: 1 };
     var dst = { a: 'a', b: 'b', c: 'c' };
 
-    copyProps(src, dst, function(value, key) {
-      if (key === 'd') {
+    copyProps(src, dst, function(srcInfo) {
+      if (srcInfo.keyChain === 'd') {
         return undefined;
       } else {
-        return value;
+        return srcInfo.value;
       }
     });
     // => { a: 'A', b: 'b', c: null }
@@ -115,13 +115,12 @@ Usage
     var src = { a: 1, b: 2 };
     var dst = {};
 
-    copyProps(src, dst, function(srcval, srckey, dstkey, dstval, dstParent) {
-      var key = dstkey.split('.').pop();
-      Object.defineProperty(dstParent, key, {
+    copyProps(src, dst, function(srcInfo, dstInfo) {
+      Object.defineProperty(dstInfo.parent, dstInfo.key, {
         writable: false,
         enumerable: true,
         configurable: false,
-        value: srcval * 2
+        value: srcInfo.value * 2
       })
     }); // => { a: 2, b: 4 }
 
@@ -139,15 +138,15 @@ Copy properties of *src* to *dst* deeply.
 If *fromto* is given, it is able to copy between different properties.
 If *converter* is given, it is able to convert the terminal values.
 
-* **Arguments:**
+**Arguments:**
 
-    * **src** [object] : a source object of copy.
-    * **dst** [object] : a destinate object of copy.
-    * **fromto** [object | array] : an object mapping properties between *src* and *dst*. (optional)
-    * **converter** [function] : a function to convert terminal values in *src*. (optional) 
-    * **reverse** [boolean] : copys reversively from dst to src and returns src object. `fromto` is also reversively used from value to key. This default value is `false`. (optional)
+* **src** [object] : a source object of copy.
+* **dst** [object] : a destinate object of copy.
+* **fromto** [object | array] : an object mapping properties between *src* and *dst*. (optional)
+* **converter** [function] : a function to convert terminal values in *src*. (optional) 
+* **reverse** [boolean] : copys reversively from dst to src and returns src object. `fromto` is also reversively used from value to key. This default value is `false`. (optional)
 
-* **Return** [object] : *dst* object after copying.
+**Return** [object] : *dst* object after copying.
 
 #### *Format of fromto*
 
@@ -166,19 +165,30 @@ copyProps(src, dst, {
 
 #### *API of converter*
 
-**<u>converter(srcValue, srcKeychain, dstKeyChain, dstValue, dstParent) => any</u>**
+**<u>converter(srcInfo, dstInfo) => any</u>**
 
 *converter* is a function to convert terminal values of propeerties of *src*.
 
-* **Arguments:**
+**Arguments:**
 
-    * **srcValue** [any] : a source property value to be converted.
-    * **srcKeychain** [string] : a source property key string concatenated with dots.
-    * **dstKeychain** [string] : a destination property key string concatenated with dots.
-    * **dstValue** [any] : a destination property value before copying.
-    * **dstParent** [object] : the destination node object which has the copied property.
+* **srcInfo** [object] : an object which has informations about the current node of *src*. This object has following properties:
 
-* **Return:** [any] : converted value to be set as a destination property value. If this value is undefined, the destination property is not set to the destination node object.
+    * **value** : The value of the current node.
+    * **key** : The key name of the current node.
+    * **keyChain** : The full key of the current node concatenated with dot.
+    * **depth** : The depth of the current node.
+    * **parent** : The parent node of the current node.
+
+* **dstInfo** [object] : an object which has informations about the current node of *dst*. This object has following properties:
+
+    * **value** : The value of the current node.
+    * **key** : The key name of the current node.
+    * **keyChain** : The full key of the current node concatenated with dot.
+    * **depth** : The depth of the current node.
+    * **parent** : The parent node of the current node.
+
+
+**Return:** [any] : converted value to be set as a destination property value. If this value is undefined, the destination property is not set to the destination node object.
 
 License
 -------
@@ -189,7 +199,7 @@ This program is free software under [MIT][mit-url] License.
 See the file LICENSE in this distribution for more details.
 
 [repo-url]: https://github.com/sttk/copy-props/
-[npm-img]: https://img.shields.io/badge/npm-v1.6.0-blue.svg
+[npm-img]: https://img.shields.io/badge/npm-v2.0.0-blue.svg
 [npm-url]: https://www.npmjs.org/package/copy-props/
 [mit-img]: https://img.shields.io/badge/license-MIT-green.svg
 [mit-url]: https://opensource.org/licenses.MIT

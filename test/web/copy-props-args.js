@@ -97,9 +97,7 @@ describe('Arguments', function() {
     it('Should succeed when 3rd arg is a function', function(done) {
       var src = { a: 1, b: { c: 2 } };
       var dst = { a: 10, b: { d: 20 } };
-      var converter = function(value) {
-        return value * 2;
-      };
+      var converter = function(srcInfo) { return srcInfo.value * 2; };
       var expected = { a: 2, b: { c: 4, d: 20 } };
       expect(copyProps(src, dst, converter)).to.deep.equal(expected);
       done();
@@ -137,8 +135,8 @@ describe('Arguments', function() {
       var dst = { A: 10, B: { D: 20 } };
       var fromto = { a: 'A', 'b.c': 'B.C' };
       var expected = { A: 2, B: { C: 4, D: 20 } };
-      expect(copyProps(src, dst, fromto, function(value) {
-        return value * 2;
+      expect(copyProps(src, dst, fromto, function(srcInfo) {
+        return srcInfo.value * 2;
       })).to.deep.equal(expected);
       done();
     });
@@ -178,7 +176,7 @@ describe('Arguments', function() {
       var src = { a: 1, b: { c: 2 } };
       var dst = { A: 10, B: { D: 20 } };
       var fromto = { a: 'A', 'b.c': 'B.C', 'b.d': 'B.D' };
-      var converter = function(value) { return value * 2; };
+      var converter = function(srcInfo) { return srcInfo.value * 2; };
       var expected = { a: 20, b: { c: 2, d: 40 } };
       expect(copyProps(src, dst, fromto, converter, true))
         .to.deep.equal(expected);
@@ -189,7 +187,7 @@ describe('Arguments', function() {
       var src = { a: 1, b: { c: 2 } };
       var dst = { A: 10, B: { D: 20 } };
       var fromto = { a: 'A', 'b.c': 'B.C', 'b.d': 'B.D' };
-      var converter = function(value) { return value * 2; };
+      var converter = function(srcInfo) { return srcInfo.value * 2; };
       var expected = { A: 2, B: { C: 4, D: 20 } };
       expect(copyProps(src, dst, fromto, converter, undefined))
         .to.deep.equal(expected);

@@ -83,10 +83,25 @@ function copyWithFromto(value, keyChain, nodeInfo) {
     dstKeyChains = [dstKeyChains];
   }
 
+  var srcInfo = {
+    keyChain: keyChain,
+    value: value,
+    key: nodeInfo.name,
+    depth: nodeInfo.depth,
+    parent: nodeInfo.parent,
+  };
+
   for (var i = 0, n = dstKeyChains.length; i < n; i++) {
-    setDeep(nodeInfo.dest, dstKeyChains[i], function(dstValue, dstParent) {
-      return nodeInfo.convert(value, keyChain, dstKeyChains[i], dstValue,
-        dstParent);
+    setDeep(nodeInfo.dest, dstKeyChains[i], function(parent, key, depth) {
+      var dstInfo = {
+        keyChain: dstKeyChains[i],
+        value: parent[key],
+        key: key,
+        depth: depth,
+        parent: parent,
+      };
+
+      return nodeInfo.convert(srcInfo, dstInfo);
     });
   }
 }
@@ -100,8 +115,24 @@ function copyWithoutFromto(value, keyChain, nodeInfo) {
     return;
   }
 
-  setDeep(nodeInfo.dest, keyChain, function(dstValue, dstParent) {
-    return nodeInfo.convert(value, keyChain, keyChain, dstValue, dstParent);
+  var srcInfo = {
+    keyChain: keyChain,
+    value: value,
+    key: nodeInfo.name,
+    depth: nodeInfo.depth,
+    parent: nodeInfo.parent,
+  };
+
+  setDeep(nodeInfo.dest, keyChain, function(parent, key, depth) {
+    var dstInfo = {
+      keyChain: keyChain,
+      value: parent[key],
+      key: key,
+      depth: depth,
+      parent: parent,
+    };
+
+    return nodeInfo.convert(srcInfo, dstInfo);
   });
 }
 
@@ -109,8 +140,8 @@ function newObject() {
   return {};
 }
 
-function noop(v) {
-  return v;
+function noop(srcInfo) {
+  return srcInfo.value;
 }
 
 function onlyValueIsString(obj) {
@@ -148,13 +179,13 @@ function invert(fromto) {
 }
 
 function setDeep(obj, keyChain, valueCreator) {
-  _setDeep(obj, keyChain.split('.'), valueCreator);
+  _setDeep(obj, keyChain.split('.'), 1, valueCreator);
 }
 
-function _setDeep(obj, keyElems, valueCreator) {
+function _setDeep(obj, keyElems, depth, valueCreator) {
   var key = keyElems.shift();
   if (!keyElems.length) {
-    var value = valueCreator(obj[key], obj);
+    var value = valueCreator(obj, key, depth);
     if (value !== undefined) {
       obj[key] = value;
     }
@@ -164,7 +195,7 @@ function _setDeep(obj, keyElems, valueCreator) {
   if (!isPlainObject(obj[key])) {
     obj[key] = {};
   }
-  _setDeep(obj[key], keyElems, valueCreator);
+  _setDeep(obj[key], keyElems, depth + 1, valueCreator);
 }
 
 function setParentEmptyObject(obj, fromto) {
