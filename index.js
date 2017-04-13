@@ -5,11 +5,11 @@ var isPlainObject = require('is-plain-object');
 
 module.exports = function(src, dst, fromto, converter, reverse) {
 
-  if (!isPlainObject(src)) {
+  if (!isObject(src)) {
     src = {};
   }
 
-  if (!isPlainObject(dst)) {
+  if (!isObject(dst)) {
     dst = {};
   }
 
@@ -213,4 +213,8 @@ function setParentEmptyObject(obj, fromto) {
 
 function newUndefined() {
   return undefined;
+}
+
+function isObject(v) {
+  return Object.prototype.toString.call(v) === '[object Object]';
 }
