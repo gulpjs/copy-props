@@ -160,6 +160,12 @@ describe('Processing', function() {
       done();
     });
 
+    it('Should do nothing when src prop is an empty object and dst is an ' +
+    'object', function() {
+      var src = { a: { b: {} } };
+      var dst = { a: { b: { c: 1 } } };
+      expect(copyProps(src, dst)).to.deep.equal({ a: { b: { c: 1 } } });
+    });
   });
 
   describe('About fromto special cases', function() {
@@ -249,6 +255,13 @@ describe('Processing', function() {
       done();
     });
 
+    it('Should do nothing when src prop is an empty object and dst is an ' +
+    'object', function() {
+      var src = { a: { b: {} } };
+      var dst = { a: { b: { c: 1 } } };
+      var fromto = ['a.b'];
+      expect(copyProps(src, dst, fromto)).to.deep.equal({ a: { b: { c: 1 } } });
+    });
   });
 
   describe('About patterns of converter returns', function() {

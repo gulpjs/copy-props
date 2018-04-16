@@ -11,7 +11,7 @@
     "test": "mocha",
     "coverage": "istanbul cover _mocha",
     "coveralls": "istanbul cover _mocha && istanbul-coveralls",
-    "web:install": "npm i phantomjs-prebuilt mocha-phantomjs",
+    "web:install": "npm install --no-save phantomjs-prebuilt mocha-phantomjs",
     "web:build": "browserify index.js --standalone copyProps | uglifyjs --compress --mangle -o web/copy-props.js && node test/web/make.js",
     "web:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/copy-props.test.html"
   },
