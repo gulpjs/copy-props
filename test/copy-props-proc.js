@@ -166,6 +166,19 @@ describe('Processing', function() {
       var dst = { a: { b: { c: 1 } } };
       expect(copyProps(src, dst)).to.deep.equal({ a: { b: { c: 1 } } });
     });
+
+    it('Should copy normally when src prop is not a plain object but an ' +
+    'object', function() {
+      function O(v) {
+        this.a = { b: { c: v } };
+      }
+      var o1 = new O(123);
+      var o2 = new O(456);
+      var p1 = { o: o1 };
+      var p2 = { o: o2 };
+      copyProps(p1, p2);
+      expect(p2.o).to.equal(o1);
+    });
   });
 
   describe('About fromto special cases', function() {

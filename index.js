@@ -189,8 +189,8 @@ function _setDeep(obj, keyElems, depth, valueCreator) {
     if (value === undefined) {
       return;
     }
-    if (isObject(value)) { // value is always an empty object.
-      if (isObject(obj[key])) {
+    if (isPlainObject(value)) { // value is always an empty object.
+      if (isPlainObject(obj[key])) {
         return;
       }
     }
