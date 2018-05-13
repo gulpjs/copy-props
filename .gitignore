@@ -5,6 +5,8 @@ npm-debug.log*
 
 # Coverage directory used by tools like istanbul
 coverage
+.nyc_output
+.coveralls.yml
 
 # Dependency directories
 node_modules

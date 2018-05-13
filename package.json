@@ -9,11 +9,12 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha",
-    "coverage": "istanbul cover _mocha",
-    "coveralls": "istanbul cover _mocha && istanbul-coveralls",
-    "web:install": "npm install --no-save phantomjs-prebuilt mocha-phantomjs",
-    "web:build": "browserify index.js --standalone copyProps | uglifyjs --compress --mangle -o web/copy-props.js && node test/web/make.js",
-    "web:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/copy-props.test.html"
+    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
+    "coveralls": "nyc --reporter=text-lcov npm test | coveralls",
+    "web:build": "browserify index.js --standalone copyProps -o web/copy-props.js && cd web && uglifyjs copy-props.js --compress --mangle -o copy-props.min.js --source-map url=copy-props.min.js.map",
+    "chrome:install": "npm i --no-save mocha-chrome",
+    "chrome:test": "mocha-chrome test/web/browser-test.html",
+    "build": "npm run lint && npm run coverage && npm run web:build && node test/web/make.js"
   },
   "repository": {
     "type": "git",
@@ -38,12 +39,12 @@
     "is-plain-object": "^2.0.1"
   },
   "devDependencies": {
-    "browserify": "^14.1.0",
+    "browserify": "^16.2.2",
     "chai": "^3.5.0",
-    "eslint": "^3.16.1",
-    "istanbul": "^0.4.5",
-    "istanbul-coveralls": "^1.0.3",
+    "coveralls": "^3.0.1",
+    "eslint": "^4.19.1",
     "mocha": "^3.2.0",
-    "uglify-js": "^2.8.1"
+    "nyc": "^11.7.2",
+    "uglify-js": "^3.3.24"
   }
 }

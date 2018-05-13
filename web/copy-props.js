@@ -1,1 +1,523 @@
-!function(t){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define([],t);else{var r;r="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,r.copyProps=t()}}(function(){return function(){function t(r,n,e){function o(u,f){if(!n[u]){if(!r[u]){var a="function"==typeof require&&require;if(!f&&a)return a(u,!0);if(i)return i(u,!0);var c=new Error("Cannot find module '"+u+"'");throw c.code="MODULE_NOT_FOUND",c}var s=n[u]={exports:{}};r[u][0].call(s.exports,function(t){return o(r[u][1][t]||t)},s,s.exports,t,r,n,e)}return n[u].exports}for(var i="function"==typeof require&&require,u=0;u<e.length;u++)o(e[u]);return o}return t}()({1:[function(t,r,n){"use strict";function e(t,r,n){if(!b(t)){var e=n.fromto[r];if(e){delete n.fromto[r],Array.isArray(e)||(e=[e]);for(var o={keyChain:r,value:t,key:n.name,depth:n.depth,parent:n.parent},i=0,u=e.length;i<u;i++)s(n.dest,e[i],function(t,r,u){var f={keyChain:e[i],value:t[r],key:r,depth:u,parent:t};return n.convert(o,f)})}}}function o(t,r,n){if(b(t)){for(var e in t)return;return void s(n.dest,r,i)}var o={keyChain:r,value:t,key:n.name,depth:n.depth,parent:n.parent};s(n.dest,r,function(t,e,i){var u={keyChain:r,value:t[e],key:e,depth:i,parent:t};return n.convert(o,u)})}function i(){return{}}function u(t){return t.value}function f(t){var r={};for(var n in t){var e=t[n];"string"==typeof e&&(r[n]=e)}return r}function a(t){for(var r={},n=0,e=t.length;n<e;n++){var o=t[n];"string"==typeof o&&(r[o]=o)}return r}function c(t){var r={};for(var n in t){var e=t[n];r[e]||(r[e]=[]),r[e].push(n)}return r}function s(t,r,n){l(t,r.split("."),1,n)}function l(t,r,n,e){var o=r.shift();if(!r.length){var i=e(t,o,n);if(void 0===i)return;if(v(i)&&v(t[o]))return;return void(t[o]=i)}b(t[o])||(t[o]={}),l(t[o],r,n+1,e)}function p(t,r){for(var n in r){var e=r[n];Array.isArray(e)||(e=[e]);for(var o=0,i=e.length;o<i;o++)s(t,e[o],y)}}function y(){}function v(t){return"[object Object]"===Object.prototype.toString.call(t)}var d=t("each-props"),b=t("is-plain-object");r.exports=function(t,r,n,i,s){if(v(t)||(t={}),v(r)||(r={}),b(n)?n=f(n):Array.isArray(n)?n=a(n):"boolean"==typeof n?(s=n,i=u,n=null):"function"==typeof n?(s=i,i=n,n=null):n=null,"function"!=typeof i&&("boolean"==typeof i?(s=i,i=u):i=u),"boolean"!=typeof s&&(s=!1),s){var l=t;t=r,r=l,n&&(n=c(n))}var y={dest:r,fromto:n,convert:i};return n?(d(t,e,y),p(r,n)):d(t,o,y),r}},{"each-props":4,"is-plain-object":7}],2:[function(t,r,n){"use strict";r.exports=function(t,r,n){if(null!=t)for(var e=t.length,o=-1;++o<e;){var i=t[o];if(!1===r.call(n,i,o,t))break}}},{}],3:[function(t,r,n){"use strict";function e(t,r,n){return r=null==r?n||0:r<0?Math.max(t+r,0):Math.min(r,t)}r.exports=function(t,r,n){var o=t.length,i=[];for(r=e(o,r),n=e(o,n,o);r<n;)i.push(t[r++]);return i}},{}],4:[function(t,r,n){"use strict";function e(t,r,n,o,f){var a=Object.keys(t);if("function"==typeof f.sort){var c=f.sort(a);Array.isArray(c)&&(a=c)}o+=1;for(var s=0,l=a.length;s<l;s++){var p=a[s],y=r+"."+p,v=t[p],d=u(f);d.name=p,d.index=s,d.count=l,d.depth=o,d.parent=t;!n(v,y.slice(1),d)&&i(v)&&e(v,y,n,o,f)}}function o(t){return"[object Object]"===Object.prototype.toString.call(t)}var i=t("is-plain-object"),u=t("object.defaults/immutable");r.exports=function(t,r,n){o(t)&&"function"==typeof r&&(i(n)||(n={}),e(t,"",r,0,n))}},{"is-plain-object":7,"object.defaults/immutable":9}],5:[function(t,r,n){"use strict";r.exports=function(t,r,n){for(var e in t)if(!1===r.call(n,t[e],e,t))break}},{}],6:[function(t,r,n){"use strict";var e=t("for-in"),o=Object.prototype.hasOwnProperty;r.exports=function(t,r,n){e(t,function(e,i){if(o.call(t,i))return r.call(n,t[i],i,t)})}},{"for-in":5}],7:[function(t,r,n){"use strict";function e(t){return!0===o(t)&&"[object Object]"===Object.prototype.toString.call(t)}var o=t("isobject");r.exports=function(t){var r,n;return!1!==e(t)&&("function"==typeof(r=t.constructor)&&(n=r.prototype,!1!==e(n)&&!1!==n.hasOwnProperty("isPrototypeOf")))}},{isobject:8}],8:[function(t,r,n){"use strict";r.exports=function(t){return null!=t&&"object"==typeof t&&!1===Array.isArray(t)}},{}],9:[function(t,r,n){"use strict";var e=t("array-slice"),o=t("./mutable");r.exports=function(){var t=e(arguments);return o.apply(null,[{}].concat(t))}},{"./mutable":10,"array-slice":3}],10:[function(t,r,n){"use strict";var e=t("array-each"),o=t("array-slice"),i=t("for-own"),u=t("isobject");r.exports=function(t,r){return null==t?{}:(e(o(arguments,1),function(r){u(r)&&i(r,function(r,n){null==t[n]&&(t[n]=r)})}),t)}},{"array-each":2,"array-slice":3,"for-own":6,isobject:8}]},{},[1])(1)});
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.copyProps = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+'use strict';
+
+var eachProps = require('each-props');
+var isPlainObject = require('is-plain-object');
+
+module.exports = function(src, dst, fromto, converter, reverse) {
+
+  if (!isObject(src)) {
+    src = {};
+  }
+
+  if (!isObject(dst)) {
+    dst = {};
+  }
+
+  if (isPlainObject(fromto)) {
+    fromto = onlyValueIsString(fromto);
+  } else if (Array.isArray(fromto)) {
+    fromto = arrayToObject(fromto);
+  } else if (typeof fromto === 'boolean') {
+    reverse = fromto;
+    converter = noop;
+    fromto = null;
+  } else if (typeof fromto === 'function') {
+    reverse = converter;
+    converter = fromto;
+    fromto = null;
+  } else {
+    fromto = null;
+  }
+
+  if (typeof converter !== 'function') {
+    if (typeof converter === 'boolean') {
+      reverse = converter;
+      converter = noop;
+    } else {
+      converter = noop;
+    }
+  }
+
+  if (typeof reverse !== 'boolean') {
+    reverse = false;
+  }
+
+  if (reverse) {
+    var tmp = src;
+    src = dst;
+    dst = tmp;
+
+    if (fromto) {
+      fromto = invert(fromto);
+    }
+  }
+
+  var opts = {
+    dest: dst,
+    fromto: fromto,
+    convert: converter,
+  };
+
+  if (fromto) {
+    eachProps(src, copyWithFromto, opts);
+    setParentEmptyObject(dst, fromto);
+  } else {
+    eachProps(src, copyWithoutFromto, opts);
+  }
+
+  return dst;
+};
+
+function copyWithFromto(value, keyChain, nodeInfo) {
+  if (isPlainObject(value)) {
+    return;
+  }
+
+  var dstKeyChains = nodeInfo.fromto[keyChain];
+  if (!dstKeyChains) {
+    return;
+  }
+  delete nodeInfo.fromto[keyChain];
+
+  if (!Array.isArray(dstKeyChains)) {
+    dstKeyChains = [dstKeyChains];
+  }
+
+  var srcInfo = {
+    keyChain: keyChain,
+    value: value,
+    key: nodeInfo.name,
+    depth: nodeInfo.depth,
+    parent: nodeInfo.parent,
+  };
+
+  for (var i = 0, n = dstKeyChains.length; i < n; i++) {
+    setDeep(nodeInfo.dest, dstKeyChains[i], function(parent, key, depth) {
+      var dstInfo = {
+        keyChain: dstKeyChains[i],
+        value: parent[key],
+        key: key,
+        depth: depth,
+        parent: parent,
+      };
+
+      return nodeInfo.convert(srcInfo, dstInfo);
+    });
+  }
+}
+
+function copyWithoutFromto(value, keyChain, nodeInfo) {
+  if (isPlainObject(value)) {
+    for (var k in value) {
+      return;
+    }
+    setDeep(nodeInfo.dest, keyChain, newObject);
+    return;
+  }
+
+  var srcInfo = {
+    keyChain: keyChain,
+    value: value,
+    key: nodeInfo.name,
+    depth: nodeInfo.depth,
+    parent: nodeInfo.parent,
+  };
+
+  setDeep(nodeInfo.dest, keyChain, function(parent, key, depth) {
+    var dstInfo = {
+      keyChain: keyChain,
+      value: parent[key],
+      key: key,
+      depth: depth,
+      parent: parent,
+    };
+
+    return nodeInfo.convert(srcInfo, dstInfo);
+  });
+}
+
+function newObject() {
+  return {};
+}
+
+function noop(srcInfo) {
+  return srcInfo.value;
+}
+
+function onlyValueIsString(obj) {
+  var newObj = {};
+  for (var key in obj) {
+    var val = obj[key];
+    if (typeof val === 'string') {
+      newObj[key] = val;
+    }
+  }
+  return newObj;
+}
+
+function arrayToObject(arr) {
+  var obj = {};
+  for (var i = 0, n = arr.length; i < n; i++) {
+    var elm = arr[i];
+    if (typeof elm === 'string') {
+      obj[elm] = elm;
+    }
+  }
+  return obj;
+}
+
+function invert(fromto) {
+  var inv = {};
+  for (var key in fromto) {
+    var val = fromto[key];
+    if (!inv[val]) {
+      inv[val] = [];
+    }
+    inv[val].push(key);
+  }
+  return inv;
+}
+
+function setDeep(obj, keyChain, valueCreator) {
+  _setDeep(obj, keyChain.split('.'), 1, valueCreator);
+}
+
+function _setDeep(obj, keyElems, depth, valueCreator) {
+  var key = keyElems.shift();
+  if (!keyElems.length) {
+    var value = valueCreator(obj, key, depth);
+    if (value === undefined) {
+      return;
+    }
+    if (isPlainObject(value)) { // value is always an empty object.
+      if (isPlainObject(obj[key])) {
+        return;
+      }
+    }
+    obj[key] = value;
+    return;
+  }
+
+  if (!isPlainObject(obj[key])) {
+    obj[key] = {};
+  }
+  _setDeep(obj[key], keyElems, depth + 1, valueCreator);
+}
+
+function setParentEmptyObject(obj, fromto) {
+  for (var srcKeyChain in fromto) {
+    var dstKeyChains = fromto[srcKeyChain];
+    if (!Array.isArray(dstKeyChains)) {
+      dstKeyChains = [dstKeyChains];
+    }
+
+    for (var i = 0, n = dstKeyChains.length; i < n; i++) {
+      setDeep(obj, dstKeyChains[i], newUndefined);
+    }
+  }
+}
+
+function newUndefined() {
+  return undefined;
+}
+
+function isObject(v) {
+  return Object.prototype.toString.call(v) === '[object Object]';
+}
+
+},{"each-props":4,"is-plain-object":7}],2:[function(require,module,exports){
+/*!
+ * array-each <https://github.com/jonschlinkert/array-each>
+ *
+ * Copyright (c) 2015, 2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+/**
+ * Loop over each item in an array and call the given function on every element.
+ *
+ * ```js
+ * each(['a', 'b', 'c'], function(ele) {
+ *   return ele + ele;
+ * });
+ * //=> ['aa', 'bb', 'cc']
+ *
+ * each(['a', 'b', 'c'], function(ele, i) {
+ *   return i + ele;
+ * });
+ * //=> ['0a', '1b', '2c']
+ * ```
+ *
+ * @name each
+ * @alias forEach
+ * @param {Array} `array`
+ * @param {Function} `fn`
+ * @param {Object} `thisArg` (optional) pass a `thisArg` to be used as the context in which to call the function.
+ * @return {undefined}
+ * @api public
+ */
+
+module.exports = function each(arr, cb, thisArg) {
+  if (arr == null) return;
+
+  var len = arr.length;
+  var idx = -1;
+
+  while (++idx < len) {
+    var ele = arr[idx];
+    if (cb.call(thisArg, ele, idx, arr) === false) {
+      break;
+    }
+  }
+};
+
+},{}],3:[function(require,module,exports){
+/*!
+ * array-slice <https://github.com/jonschlinkert/array-slice>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+module.exports = function slice(arr, start, end) {
+  var len = arr.length;
+  var range = [];
+
+  start = idx(len, start);
+  end = idx(len, end, len);
+
+  while (start < end) {
+    range.push(arr[start++]);
+  }
+  return range;
+};
+
+function idx(len, pos, end) {
+  if (pos == null) {
+    pos = end || 0;
+  } else if (pos < 0) {
+    pos = Math.max(len + pos, 0);
+  } else {
+    pos = Math.min(pos, len);
+  }
+
+  return pos;
+}
+
+},{}],4:[function(require,module,exports){
+'use strict';
+
+var isPlainObject = require('is-plain-object');
+var defaults = require('object.defaults/immutable');
+
+module.exports = function(obj, fn, opts) {
+  if (!isObject(obj)) {
+    return;
+  }
+
+  if (typeof fn !== 'function') {
+    return;
+  }
+
+  if (!isPlainObject(opts)) {
+    opts = {};
+  }
+
+  forEachChild(obj, '', fn, 0, opts);
+};
+
+function forEachChild(node, baseKey, fn, depth, opts) {
+  var keys = Object.keys(node);
+  if (typeof opts.sort === 'function') {
+    var sortedKeys = opts.sort(keys);
+    if (Array.isArray(sortedKeys)) {
+      keys = sortedKeys;
+    }
+  }
+
+  depth += 1;
+
+  for (var i = 0, n = keys.length; i < n; i++) {
+    var key = keys[i];
+    var keyChain = baseKey + '.' + key;
+    var value = node[key];
+
+    var nodeInfo = defaults(opts);
+    nodeInfo.name = key;
+    nodeInfo.index = i;
+    nodeInfo.count = n;
+    nodeInfo.depth = depth;
+    nodeInfo.parent = node;
+
+    var notDigg = fn(value, keyChain.slice(1), nodeInfo);
+    if (notDigg || !isPlainObject(value)) {
+      continue;
+    }
+
+    forEachChild(value, keyChain, fn, depth, opts);
+  }
+}
+
+function isObject(v) {
+  return Object.prototype.toString.call(v) === '[object Object]';
+}
+
+
+},{"is-plain-object":7,"object.defaults/immutable":9}],5:[function(require,module,exports){
+/*!
+ * for-in <https://github.com/jonschlinkert/for-in>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+module.exports = function forIn(obj, fn, thisArg) {
+  for (var key in obj) {
+    if (fn.call(thisArg, obj[key], key, obj) === false) {
+      break;
+    }
+  }
+};
+
+},{}],6:[function(require,module,exports){
+/*!
+ * for-own <https://github.com/jonschlinkert/for-own>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+var forIn = require('for-in');
+var hasOwn = Object.prototype.hasOwnProperty;
+
+module.exports = function forOwn(obj, fn, thisArg) {
+  forIn(obj, function(val, key) {
+    if (hasOwn.call(obj, key)) {
+      return fn.call(thisArg, obj[key], key, obj);
+    }
+  });
+};
+
+},{"for-in":5}],7:[function(require,module,exports){
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+var isObject = require('isobject');
+
+function isObjectObject(o) {
+  return isObject(o) === true
+    && Object.prototype.toString.call(o) === '[object Object]';
+}
+
+module.exports = function isPlainObject(o) {
+  var ctor,prot;
+
+  if (isObjectObject(o) === false) return false;
+
+  // If has modified constructor
+  ctor = o.constructor;
+  if (typeof ctor !== 'function') return false;
+
+  // If has modified prototype
+  prot = ctor.prototype;
+  if (isObjectObject(prot) === false) return false;
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+};
+
+},{"isobject":8}],8:[function(require,module,exports){
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+module.exports = function isObject(val) {
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+};
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var slice = require('array-slice');
+
+var defaults = require('./mutable');
+
+/**
+ * Extends an empty object with properties of one or
+ * more additional `objects`
+ *
+ * @name .defaults.immutable
+ * @param  {Object} `objects`
+ * @return {Object}
+ * @api public
+ */
+
+module.exports = function immutableDefaults() {
+  var args = slice(arguments);
+  return defaults.apply(null, [{}].concat(args));
+};
+
+},{"./mutable":10,"array-slice":3}],10:[function(require,module,exports){
+'use strict';
+
+var each = require('array-each');
+var slice = require('array-slice');
+var forOwn = require('for-own');
+var isObject = require('isobject');
+
+/**
+ * Extends the `target` object with properties of one or
+ * more additional `objects`
+ *
+ * @name .defaults
+ * @param  {Object} `target` The target object. Pass an empty object to shallow clone.
+ * @param  {Object} `objects`
+ * @return {Object}
+ * @api public
+ */
+
+module.exports = function defaults(target, objects) {
+  if (target == null) {
+    return {};
+  }
+
+  each(slice(arguments, 1), function(obj) {
+    if (isObject(obj)) {
+      forOwn(obj, function(val, key) {
+        if (target[key] == null) {
+          target[key] = val;
+        }
+      });
+    }
+  });
+
+  return target;
+};
+
+},{"array-each":2,"array-slice":3,"for-own":6,"isobject":8}]},{},[1])(1)
+});
