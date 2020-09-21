@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-/* eslint max-statements: "off", branch-style: "off" */
+/* eslint max-statements: "off" */
 
 describe('Processing', function() {
 
