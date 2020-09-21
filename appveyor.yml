@@ -20,7 +20,8 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install
+  - ps: if ($env:nodejs_version -eq '5') { npm i -g npm@4 }
+  - cmd: npm install
 
 test_script:
   - node --version
