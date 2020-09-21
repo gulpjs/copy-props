@@ -1,7 +1,7 @@
 'use strict';
 
 var eachProps = require('each-props');
-var isPlainObject = require('is-plain-object');
+var isPlainObject = require('is-plain-object').isPlainObject;
 
 module.exports = function(src, dst, fromto, converter, reverse) {
 
