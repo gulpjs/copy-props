@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sttk/copy-props.git"
+    "url": "git+https://github.com/gulpjs/copy-props.git"
   },
   "keywords": [
     "object",
@@ -28,12 +28,12 @@
     "map",
     "convert"
   ],
-  "author": "Takayuki Sato",
+  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sttk/copy-props/issues"
+    "url": "https://github.com/gulpjs/copy-props/issues"
   },
-  "homepage": "https://github.com/sttk/copy-props#readme",
+  "homepage": "https://github.com/gulpjs/copy-props#readme",
   "dependencies": {
     "each-props": "^1.3.2",
     "is-plain-object": "^5.0.0"
