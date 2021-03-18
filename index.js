@@ -184,6 +184,10 @@ function setDeep(obj, keyChain, valueCreator) {
 
 function _setDeep(obj, keyElems, depth, valueCreator) {
   var key = keyElems.shift();
+  if (isPossibilityOfPrototypePollution(key)) {
+    return;
+  }
+
   if (!keyElems.length) {
     var value = valueCreator(obj, key, depth);
     if (value === undefined) {
@@ -223,4 +227,8 @@ function newUndefined() {
 
 function isObject(v) {
   return Object.prototype.toString.call(v) === '[object Object]';
+}
+
+function isPossibilityOfPrototypePollution(key) {
+  return (key === '__proto__' || key === 'constructor');
 }

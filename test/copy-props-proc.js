@@ -701,4 +701,106 @@ describe('Processing', function() {
 
   });
 
+  describe('Avoid a prototype pollution vulnerability', function() {
+
+    describe('The critical property key is in a src object', function() {
+
+      it('should ignore a property key: __proto__', function(done) {
+        var maliciousSrcJson = '{"__proto__":{"polluted":"polluted"},"a":1}';
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({ a: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+      it('should ignore a property key: constructor.prototype', function(done) {
+        var maliciousSrcJson = '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({ a: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+    });
+
+    describe('The critical property key is in a dest object and using reverse', function() {
+
+      it('should ignore a property key: __proto__', function(done) {
+        var maliciousSrcJson = '{"__proto__":{"polluted":"polluted"},"a":1}';
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal({ a: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+      it('should ignore a property key: constructor.prototype', function(done) {
+        var maliciousSrcJson = '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal({ a: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+    });
+
+    describe('The critical property value is in a fromto object', function() {
+
+      it('should ignore a property value: __proto__', function(done) {
+        var fromto = { a: '__proto__.poluuted', b: 'c' };
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({ c: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+      it('should ignore a property value: constructor.prototype', function(done) {
+        var fromto = { a: 'constructor.prototype.polluted', b: 'c' };
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({ c: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+    });
+
+    describe('The critical property key is in a fromto object and using reverse', function() {
+
+      it('should ignore a property key: __proto__', function(done) {
+        var fromto = { '__proto__.poluuted': 'a', c: 'b' };
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).to.deep.equal({ c: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+      it('should ignore a property key: constructor.prototype and using reverse', function(done) {
+        var fromto = { 'constructor.prototype.polluted': 'a', c: 'b' };
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).to.deep.equal({ c: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+    });
+
+    describe('The critical element is in a fromto array', function() {
+
+      it('should ignore an element: __proto__', function(done) {
+        var fromto = ['__proto__.polluted', 'b'];
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps(JSON.parse('{"__proto__":{"polluted":"polluted"},"b":1}'), {}, fromto)).to.deep.equal({ b: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+      it('should ignore an element: constructor.prototype', function(done) {
+        var fromto = ['constructor.prototype.polluted', 'b'];
+        expect({}.polluted).to.be.undefined;
+        expect(copyProps(JSON.parse('{"constructor":{"prototype":{"polluted":"polluted"}},"b":1}'), {}, fromto)).to.deep.equal({ b: 1 });
+        expect({}.polluted).to.be.undefined;
+        done();
+      });
+
+    });
+  });
 });
