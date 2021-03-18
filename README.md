@@ -209,13 +209,13 @@ If *converter* is given, it is able to convert the terminal values.
 
 ## License
 
-Copyright (C) 2016-2020 Gulp Team.
+Copyright (C) 2016-2021 Gulp Team.
 
 This program is free software under [MIT][mit-url] License.
 See the file LICENSE in this distribution for more details.
 
 [repo-url]: https://github.com/gulpjs/copy-props/
-[npm-img]: https://img.shields.io/badge/npm-v2.0.4-blue.svg
+[npm-img]: https://img.shields.io/badge/npm-v2.0.5-blue.svg
 [npm-url]: https://www.npmjs.org/package/copy-props/
 [mit-img]: https://img.shields.io/badge/license-MIT-green.svg
 [mit-url]: https://opensource.org/licenses.MIT
