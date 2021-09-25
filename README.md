@@ -1,4 +1,12 @@
-# [copy-props][repo-url] [![NPM][npm-img]][npm-url] [![MIT License][mit-img]][mit-url] [![Build Status][travis-img]][travis-url] [![Build Status][appveyor-img]][appveyor-url] [![Coverage Status][coverage-img]][coverage-url]
+<p align="center">
+  <a href="http://gulpjs.com">
+    <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
+  </a>
+</p>
+
+# copy-props
+
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
 Copy properties between two objects deeply.
 
@@ -214,14 +222,19 @@ Copyright (C) 2016-2021 Gulp Team.
 This program is free software under [MIT][mit-url] License.
 See the file LICENSE in this distribution for more details.
 
-[repo-url]: https://github.com/gulpjs/copy-props/
-[npm-img]: https://img.shields.io/badge/npm-v2.0.5-blue.svg
-[npm-url]: https://www.npmjs.org/package/copy-props/
-[mit-img]: https://img.shields.io/badge/license-MIT-green.svg
-[mit-url]: https://opensource.org/licenses.MIT
-[travis-img]: https://travis-ci.org/gulpjs/copy-props.svg?branch=master
-[travis-url]: https://travis-ci.org/gulpjs/copy-props
-[appveyor-img]: https://ci.appveyor.com/api/projects/status/github/gulpjs/copy-props?branch=master&svg=true
-[appveyor-url]: https://ci.appveyor.com/project/gulpjs/copy-props
-[coverage-img]: https://coveralls.io/repos/github/gulpjs/copy-props/badge.svg?branch=master
-[coverage-url]: https://coveralls.io/github/gulpjs/copy-props?branch=master
+
+<!-- prettier-ignore-start -->
+[downloads-image]: https://img.shields.io/npm/dm/copy-props.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/package/copy-props
+[npm-image]: https://img.shields.io/npm/v/copy-props.svg?style=flat-square
+
+[ci-url]: https://github.com/gulpjs/copy-props/actions?query=workflow:dev
+[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/copy-props/dev?style=flat-square
+
+[coveralls-url]: https://coveralls.io/r/gulpjs/copy-props
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/master.svg
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+[mit-url]: https://opensource.org/licenses/MIT
+<!-- prettier-ignore-end -->
