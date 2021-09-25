@@ -1,19 +1,23 @@
 'use strict';
 
-
-
 var expect = chai.expect;
 
 /* eslint max-statements: "off" */
 
-describe('Processing', function() {
-
-  describe('When src and dst is single depth objects', function() {
-
-    it('Should copy properties of src to dst', function(done) {
-      var fn = function() {};
-      var src = { a: null, b: true, c: 123, d: 'ABC', e: [1,2,3],
-        f: { g: 1, h: 'H' }, i: new Date(0), j: fn };
+describe('Processing', function () {
+  describe('When src and dst is single depth objects', function () {
+    it('Should copy properties of src to dst', function (done) {
+      var fn = function () {};
+      var src = {
+        a: null,
+        b: true,
+        c: 123,
+        d: 'ABC',
+        e: [1, 2, 3],
+        f: { g: 1, h: 'H' },
+        i: new Date(0),
+        j: fn,
+      };
       var dst = {};
       var result = copyProps(src, dst);
       expect(result).to.equal(dst);
@@ -21,7 +25,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should overwrite dst properties by src properties', function(done) {
+    it('Should overwrite dst properties by src properties', function (done) {
       var src = { a: 123, b: 'bbb', c: true };
       var dst = { a: 987, b: 'BBB', c: false };
       var result = copyProps(src, dst);
@@ -29,8 +33,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should ignore src properties of which value is undefined',
-    function(done) {
+    it('Should ignore src properties of which value is undefined', function (done) {
       var src = { a: 0, b: '', c: null, d: undefined };
       var dst = {};
       var result = copyProps(src, dst);
@@ -38,12 +41,10 @@ describe('Processing', function() {
       expect(result).to.deep.equal(expected);
       done();
     });
-
   });
 
-  describe('When src and dst is multiple depth objects', function() {
-
-    it('Should copy properties of src to dst', function(done) {
+  describe('When src and dst is multiple depth objects', function () {
+    it('Should copy properties of src to dst', function (done) {
       var src = {
         a: 'A1',
         b: {
@@ -63,7 +64,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should overwrite dst properties by src properties', function(done) {
+    it('Should overwrite dst properties by src properties', function (done) {
       var src = {
         a: 'A1',
         b: {
@@ -93,8 +94,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should ignore src properties of which value is undefined',
-    function(done) {
+    it('Should ignore src properties of which value is undefined', function (done) {
       var src = {
         a: '',
         b: {
@@ -138,8 +138,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should copy properties until parent object if value is undefined',
-    function(done) {
+    it('Should copy properties until parent object if value is undefined', function (done) {
       var src = {
         a: undefined,
         b: { c: undefined },
@@ -160,30 +159,35 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should do nothing when src prop is an empty object and dst is an ' +
-    'object', function() {
-      var src = { a: { b: {} } };
-      var dst = { a: { b: { c: 1 } } };
-      expect(copyProps(src, dst)).to.deep.equal({ a: { b: { c: 1 } } });
-    });
-
-    it('Should copy normally when src prop is not a plain object but an ' +
-    'object', function() {
-      function O(v) {
-        this.a = { b: { c: v } };
+    it(
+      'Should do nothing when src prop is an empty object and dst is an ' +
+        'object',
+      function () {
+        var src = { a: { b: {} } };
+        var dst = { a: { b: { c: 1 } } };
+        expect(copyProps(src, dst)).to.deep.equal({ a: { b: { c: 1 } } });
       }
-      var o1 = new O(123);
-      var o2 = new O(456);
-      var p1 = { o: o1 };
-      var p2 = { o: o2 };
-      copyProps(p1, p2);
-      expect(p2.o).to.equal(o1);
-    });
+    );
+
+    it(
+      'Should copy normally when src prop is not a plain object but an ' +
+        'object',
+      function () {
+        function O(v) {
+          this.a = { b: { c: v } };
+        }
+        var o1 = new O(123);
+        var o2 = new O(456);
+        var p1 = { o: o1 };
+        var p2 = { o: o2 };
+        copyProps(p1, p2);
+        expect(p2.o).to.equal(o1);
+      }
+    );
   });
 
-  describe('About fromto special cases', function() {
-
-    it('When fromto has surplus properties to src', function(done) {
+  describe('About fromto special cases', function () {
+    it('When fromto has surplus properties to src', function (done) {
       var src = { a: 1, b: { c: 2 } };
       var dst = { A: 9, B: { C: 8 } };
       var fromto = { a: 'A', b: 'B', 'b.c': 'B.C', 'b.d': 'B.D', e: 'E' };
@@ -193,7 +197,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When fromto has a part of properties of src', function(done) {
+    it('When fromto has a part of properties of src', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
       var dst = { A: 9, B: { C: 8, d: 7 }, e: 6 };
       var fromto = { a: 'A', b: 'B', 'b.c': 'B.C' };
@@ -203,17 +207,17 @@ describe('Processing', function() {
       done();
     });
 
-    it('When fromto changes the structure against src', function(done) {
+    it('When fromto changes the structure against src', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
-      var dst = { A: 9, B: { C: 8 },  d: 7, e: 6 };
-      var fromto = { 'a': 'A.A', 'b.c': 'B', 'b.d': 'D.E.F' };
+      var dst = { A: 9, B: { C: 8 }, d: 7, e: 6 };
+      var fromto = { a: 'A.A', 'b.c': 'B', 'b.d': 'D.E.F' };
       var result = copyProps(src, dst, fromto);
-      var expected = { A: { A: 1 }, B: 2, D: { E: { F: 3 }, }, d: 7, e: 6 };
+      var expected = { A: { A: 1 }, B: 2, D: { E: { F: 3 } }, d: 7, e: 6 };
       expect(result).to.deep.equal(expected);
       done();
     });
 
-    it('When fromto is an empty object', function(done) {
+    it('When fromto is an empty object', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
       var dst = {};
       var fromto = {};
@@ -223,7 +227,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When fromto is an empty array', function(done) {
+    it('When fromto is an empty array', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
       var dst = {};
       var fromto = [];
@@ -233,7 +237,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When fromto object contains non-string value', function(done) {
+    it('When fromto object contains non-string value', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
       var dst = {};
       var fromto = { a: 'A', 'b.c': true, 'b.d': 123, 'b.e': ['B.E'] };
@@ -243,7 +247,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When fromto array contains non-string element', function(done) {
+    it('When fromto array contains non-string element', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 }, e: 4 };
       var dst = {};
       var fromto = ['a', true, 123, ['B.E']];
@@ -253,8 +257,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should copy properties until parent object if value is undefined',
-    function(done) {
+    it('Should copy properties until parent object if value is undefined', function (done) {
       var src = {};
       var dst = {};
       var fromto = ['a', 'b.c', 'b.d', 'e.f.g'];
@@ -268,18 +271,22 @@ describe('Processing', function() {
       done();
     });
 
-    it('Should do nothing when src prop is an empty object and dst is an ' +
-    'object', function() {
-      var src = { a: { b: {} } };
-      var dst = { a: { b: { c: 1 } } };
-      var fromto = ['a.b'];
-      expect(copyProps(src, dst, fromto)).to.deep.equal({ a: { b: { c: 1 } } });
-    });
+    it(
+      'Should do nothing when src prop is an empty object and dst is an ' +
+        'object',
+      function () {
+        var src = { a: { b: {} } };
+        var dst = { a: { b: { c: 1 } } };
+        var fromto = ['a.b'];
+        expect(copyProps(src, dst, fromto)).to.deep.equal({
+          a: { b: { c: 1 } },
+        });
+      }
+    );
   });
 
-  describe('About patterns of converter returns', function() {
-
-    it('When converter returns undefined', function(done) {
+  describe('About patterns of converter returns', function () {
+    it('When converter returns undefined', function (done) {
       var src = { a: 1, b: { c: 2, d: 3, e: 4 } };
       var dst = { a: 'A', b: { e: 'E' } };
       function fn(srcInfo, dstInfo) {
@@ -337,7 +344,7 @@ describe('Processing', function() {
             break;
           }
         }
-        return (srcInfo.keyChain === 'b.c') ? undefined : srcInfo.value;
+        return srcInfo.keyChain === 'b.c' ? undefined : srcInfo.value;
       }
       var result = copyProps(src, dst, fn);
       var expected = { a: 1, b: { d: 3, e: 4 } };
@@ -345,7 +352,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When converter returns null', function(done) {
+    it('When converter returns null', function (done) {
       var src = { a: 1, b: { c: 2, d: 3 } };
       var dst = {};
       function fn(srcInfo, dstInfo) {
@@ -391,19 +398,17 @@ describe('Processing', function() {
             break;
           }
         }
-        return (srcInfo.keyChain === 'b.c') ? null : srcInfo.value;
+        return srcInfo.keyChain === 'b.c' ? null : srcInfo.value;
       }
       var result = copyProps(src, dst, fn);
       var expected = { a: 1, b: { c: null, d: 3 } };
       expect(result).to.deep.equal(expected);
       done();
     });
-
   });
 
-  describe('About reverse', function() {
-
-    it('When reverse is true', function(done) {
+  describe('About reverse', function () {
+    it('When reverse is true', function (done) {
       var src = { a: 1, b: { d: 3 } };
       var dst = { a: 'A', b: { c: 'C', d: 'D' } };
       var result = copyProps(src, dst, true);
@@ -419,7 +424,7 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(srcInfo, dstInfo) {
+      var converter = function (srcInfo, dstInfo) {
         switch (srcInfo.keyChain) {
           case 'a': {
             expect(srcInfo.value).to.equal('A');
@@ -475,7 +480,7 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(srcInfo, dstInfo) {
+      converter = function (srcInfo, dstInfo) {
         switch (srcInfo.keyChain) {
           case 'a': {
             expect(srcInfo.value).to.equal('A');
@@ -542,7 +547,7 @@ describe('Processing', function() {
       done();
     });
 
-    it('When reverse is false', function(done) {
+    it('When reverse is false', function (done) {
       var src = { a: 1, b: { d: 3 } };
       var dst = { a: 'A', b: { c: 'C', d: 'D' } };
       var result = copyProps(src, dst, false);
@@ -558,7 +563,7 @@ describe('Processing', function() {
 
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D' } };
-      var converter = function(srcInfo, dstInfo) {
+      var converter = function (srcInfo, dstInfo) {
         switch (srcInfo.keyChain) {
           case 'a': {
             expect(srcInfo.value).to.equal(1);
@@ -614,7 +619,7 @@ describe('Processing', function() {
       src = { a: 1, b: { c: 2, d: 3 } };
       dst = { a: 'A', b: { c: 'C', d: 'D', e: 'E', f: 'F' } };
       fromto = ['a', 'b.c', 'b.d', 'b.e'];
-      converter = function(srcInfo, dstInfo) {
+      converter = function (srcInfo, dstInfo) {
         switch (srcInfo.keyChain) {
           case 'a': {
             expect(srcInfo.value).to.equal(1);
@@ -681,126 +686,149 @@ describe('Processing', function() {
       done();
     });
 
-    it('When reverse is true and fromto has a property of which value ' +
-       'is same \n\twith other properties', function(done) {
-      var src = { a: 1, b: { c: 2, d: 3 } };
-      var dst = { A: 'AAA', B: 'BBB' };
-      var fromto = { a: 'A', 'b.c': 'B', 'b.d': 'B' };
-      var expected = { A: 1, B: 3 };
-      var result = copyProps(src, dst, fromto);
-      expect(result).to.deep.equal(expected);
+    it(
+      'When reverse is true and fromto has a property of which value ' +
+        'is same \n\twith other properties',
+      function (done) {
+        var src = { a: 1, b: { c: 2, d: 3 } };
+        var dst = { A: 'AAA', B: 'BBB' };
+        var fromto = { a: 'A', 'b.c': 'B', 'b.d': 'B' };
+        var expected = { A: 1, B: 3 };
+        var result = copyProps(src, dst, fromto);
+        expect(result).to.deep.equal(expected);
 
-      src = { a: 1, b: { c: 2, d: 3 } };
-      dst = { A: 'AAA', B: 'BBB' };
-      fromto = { a: 'A', 'b.c': 'B', 'b.d': 'B' };
-      expected = { a: 'AAA', b: { c: 'BBB', d: 'BBB' } };
-      result = copyProps(src, dst, fromto, true);
-      expect(result).to.deep.equal(expected);
-      done();
-    });
-
+        src = { a: 1, b: { c: 2, d: 3 } };
+        dst = { A: 'AAA', B: 'BBB' };
+        fromto = { a: 'A', 'b.c': 'B', 'b.d': 'B' };
+        expected = { a: 'AAA', b: { c: 'BBB', d: 'BBB' } };
+        result = copyProps(src, dst, fromto, true);
+        expect(result).to.deep.equal(expected);
+        done();
+      }
+    );
   });
 
-  describe('Avoid a prototype pollution vulnerability', function() {
-
-    describe('The critical property key is in a src object', function() {
-
-      it('should ignore a property key: __proto__', function(done) {
+  describe('Avoid a prototype pollution vulnerability', function () {
+    describe('The critical property key is in a src object', function () {
+      it('should ignore a property key: __proto__', function (done) {
         var maliciousSrcJson = '{"__proto__":{"polluted":"polluted"},"a":1}';
         expect({}.polluted).to.be.undefined;
-        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({ a: 1 });
+        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({
+          a: 1,
+        });
         expect({}.polluted).to.be.undefined;
         done();
       });
 
-      it('should ignore a property key: constructor.prototype', function(done) {
-        var maliciousSrcJson = '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
+      it('should ignore a property key: constructor.prototype', function (done) {
+        var maliciousSrcJson =
+          '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
         expect({}.polluted).to.be.undefined;
-        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({ a: 1 });
+        expect(copyProps(JSON.parse(maliciousSrcJson), {})).to.deep.equal({
+          a: 1,
+        });
         expect({}.polluted).to.be.undefined;
         done();
       });
-
     });
 
-    describe('The critical property key is in a dest object and using reverse', function() {
-
-      it('should ignore a property key: __proto__', function(done) {
+    describe('The critical property key is in a dest object and using reverse', function () {
+      it('should ignore a property key: __proto__', function (done) {
         var maliciousSrcJson = '{"__proto__":{"polluted":"polluted"},"a":1}';
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal({ a: 1 });
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal(
+          { a: 1 }
+        );
         expect({}.polluted).to.be.undefined;
         done();
       });
 
-      it('should ignore a property key: constructor.prototype', function(done) {
-        var maliciousSrcJson = '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
+      it('should ignore a property key: constructor.prototype', function (done) {
+        var maliciousSrcJson =
+          '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal({ a: 1 });
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).to.deep.equal(
+          { a: 1 }
+        );
         expect({}.polluted).to.be.undefined;
         done();
       });
-
     });
 
-    describe('The critical property value is in a fromto object', function() {
-
-      it('should ignore a property value: __proto__', function(done) {
+    describe('The critical property value is in a fromto object', function () {
+      it('should ignore a property value: __proto__', function (done) {
         var fromto = { a: '__proto__.poluuted', b: 'c' };
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({ c: 1 });
+        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({
+          c: 1,
+        });
         expect({}.polluted).to.be.undefined;
         done();
       });
 
-      it('should ignore a property value: constructor.prototype', function(done) {
+      it('should ignore a property value: constructor.prototype', function (done) {
         var fromto = { a: 'constructor.prototype.polluted', b: 'c' };
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({ c: 1 });
+        expect(copyProps({ a: 'polluted', b: 1 }, {}, fromto)).to.deep.equal({
+          c: 1,
+        });
         expect({}.polluted).to.be.undefined;
         done();
       });
-
     });
 
-    describe('The critical property key is in a fromto object and using reverse', function() {
-
-      it('should ignore a property key: __proto__', function(done) {
+    describe('The critical property key is in a fromto object and using reverse', function () {
+      it('should ignore a property key: __proto__', function (done) {
         var fromto = { '__proto__.poluuted': 'a', c: 'b' };
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).to.deep.equal({ c: 1 });
+        expect(
+          copyProps({}, { a: 'polluted', b: 1 }, fromto, true)
+        ).to.deep.equal({ c: 1 });
         expect({}.polluted).to.be.undefined;
         done();
       });
 
-      it('should ignore a property key: constructor.prototype and using reverse', function(done) {
+      it('should ignore a property key: constructor.prototype and using reverse', function (done) {
         var fromto = { 'constructor.prototype.polluted': 'a', c: 'b' };
         expect({}.polluted).to.be.undefined;
-        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).to.deep.equal({ c: 1 });
+        expect(
+          copyProps({}, { a: 'polluted', b: 1 }, fromto, true)
+        ).to.deep.equal({ c: 1 });
         expect({}.polluted).to.be.undefined;
         done();
       });
-
     });
 
-    describe('The critical element is in a fromto array', function() {
-
-      it('should ignore an element: __proto__', function(done) {
+    describe('The critical element is in a fromto array', function () {
+      it('should ignore an element: __proto__', function (done) {
         var fromto = ['__proto__.polluted', 'b'];
         expect({}.polluted).to.be.undefined;
-        expect(copyProps(JSON.parse('{"__proto__":{"polluted":"polluted"},"b":1}'), {}, fromto)).to.deep.equal({ b: 1 });
+        expect(
+          copyProps(
+            JSON.parse('{"__proto__":{"polluted":"polluted"},"b":1}'),
+            {},
+            fromto
+          )
+        ).to.deep.equal({ b: 1 });
         expect({}.polluted).to.be.undefined;
         done();
       });
 
-      it('should ignore an element: constructor.prototype', function(done) {
+      it('should ignore an element: constructor.prototype', function (done) {
         var fromto = ['constructor.prototype.polluted', 'b'];
         expect({}.polluted).to.be.undefined;
-        expect(copyProps(JSON.parse('{"constructor":{"prototype":{"polluted":"polluted"}},"b":1}'), {}, fromto)).to.deep.equal({ b: 1 });
+        expect(
+          copyProps(
+            JSON.parse(
+              '{"constructor":{"prototype":{"polluted":"polluted"}},"b":1}'
+            ),
+            {},
+            fromto
+          )
+        ).to.deep.equal({ b: 1 });
         expect({}.polluted).to.be.undefined;
         done();
       });
-
     });
   });
 });
