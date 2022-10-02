@@ -223,10 +223,7 @@ _dst_ object after copying.
 
 ## License
 
-Copyright (C) 2016-2021 Gulp Team.
-
-This program is free software under [MIT][mit-url] License.
-See the file LICENSE in this distribution for more details.
+MIT
 
 <!-- prettier-ignore-start -->
 [downloads-image]: https://img.shields.io/npm/dm/copy-props.svg?style=flat-square
@@ -238,8 +235,4 @@ See the file LICENSE in this distribution for more details.
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/copy-props
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/master.svg
-<!-- prettier-ignore-end -->
-
-<!-- prettier-ignore-start -->
-[mit-url]: https://opensource.org/licenses/MIT
 <!-- prettier-ignore-end -->
