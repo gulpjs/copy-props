@@ -164,17 +164,18 @@ describe('Processing', function () {
     it(
       'Should do nothing when src prop is an empty object and dst is an ' +
         'object',
-      function () {
+      function (done) {
         var src = { a: { b: {} } };
         var dst = { a: { b: { c: 1 } } };
         expect(copyProps(src, dst)).to.deep.equal({ a: { b: { c: 1 } } });
+        done();
       }
     );
 
     it(
       'Should copy normally when src prop is not a plain object but an ' +
         'object',
-      function () {
+      function (done) {
         function O(v) {
           this.a = { b: { c: v } };
         }
@@ -184,6 +185,7 @@ describe('Processing', function () {
         var p2 = { o: o2 };
         copyProps(p1, p2);
         expect(p2.o).to.equal(o1);
+        done();
       }
     );
   });
@@ -276,13 +278,14 @@ describe('Processing', function () {
     it(
       'Should do nothing when src prop is an empty object and dst is an ' +
         'object',
-      function () {
+      function (done) {
         var src = { a: { b: {} } };
         var dst = { a: { b: { c: 1 } } };
         var fromto = ['a.b'];
         expect(copyProps(src, dst, fromto)).to.deep.equal({
           a: { b: { c: 1 } },
         });
+        done();
       }
     );
   });
