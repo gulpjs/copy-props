@@ -5,17 +5,15 @@
   "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "LICENSE"
   ],
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "nyc mocha --async-only"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gulpjs/copy-props.git"
-  },
+  "repository": "gulpjs/copy-prop",
   "keywords": [
     "object",
     "property",
@@ -28,10 +26,6 @@
   "engines": {
     "node": ">= 10.13.0"
   },
-  "bugs": {
-    "url": "https://github.com/gulpjs/copy-props/issues"
-  },
-  "homepage": "https://github.com/gulpjs/copy-props#readme",
   "nyc": {
     "reporter": [
       "lcov",
