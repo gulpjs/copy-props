@@ -4,8 +4,6 @@ var copyProps = require('..');
 var chai = require('chai');
 var expect = chai.expect;
 
-/* eslint max-statements: "off", brace-style: "off" */
-
 describe('Arguments', function () {
   describe('When arguments is src and dest', function () {
     it('Should succeed when src and dst is normal', function (done) {

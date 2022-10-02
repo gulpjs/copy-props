@@ -4,8 +4,6 @@ var copyProps = require('..');
 var chai = require('chai');
 var expect = chai.expect;
 
-/* eslint max-statements: "off" */
-
 describe('Processing', function () {
   describe('When src and dst is single depth objects', function () {
     it('Should copy properties of src to dst', function (done) {
