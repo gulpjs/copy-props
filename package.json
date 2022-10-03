@@ -40,10 +40,10 @@
     "is-plain-object": "^5.0.0"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
     "eslint": "^7.32.0",
     "eslint-config-gulp": "^5.0.1",
     "eslint-plugin-node": "^11.1.0",
+    "expect": "^27.5.1",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0"
   }
