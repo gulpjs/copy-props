@@ -648,7 +648,7 @@ describe('Processing', function () {
             break;
           }
           case 'b.e': {
-            expect(srcInfo.value).toBeUndefined()
+            expect(srcInfo.value).toBeUndefined();
             expect(srcInfo.key).toEqual('e');
             expect(srcInfo.depth).toEqual(2);
             expect(srcInfo.parent).toBe(src.b);
@@ -722,9 +722,9 @@ describe('Processing', function () {
       it('should ignore a property key: __proto__', function (done) {
         var maliciousSrcJson = '{"__proto__":{"polluted":"polluted"},"a":1}';
         expect({}.polluted).toBeUndefined();
-        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).toEqual(
-          { a: 1 }
-        );
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).toEqual({
+          a: 1,
+        });
         expect({}.polluted).toBeUndefined();
         done();
       });
@@ -733,9 +733,9 @@ describe('Processing', function () {
         var maliciousSrcJson =
           '{"constructor":{"prototype":{"polluted":"polluted"}},"a":1}';
         expect({}.polluted).toBeUndefined();
-        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).toEqual(
-          { a: 1 }
-        );
+        expect(copyProps({}, JSON.parse(maliciousSrcJson), true)).toEqual({
+          a: 1,
+        });
         expect({}.polluted).toBeUndefined();
         done();
       });
@@ -767,9 +767,9 @@ describe('Processing', function () {
       it('should ignore a property key: __proto__', function (done) {
         var fromto = { '__proto__.poluuted': 'a', c: 'b' };
         expect({}.polluted).toBeUndefined();
-        expect(
-          copyProps({}, { a: 'polluted', b: 1 }, fromto, true)
-        ).toEqual({ c: 1 });
+        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).toEqual({
+          c: 1,
+        });
         expect({}.polluted).toBeUndefined();
         done();
       });
@@ -777,9 +777,9 @@ describe('Processing', function () {
       it('should ignore a property key: constructor.prototype and using reverse', function (done) {
         var fromto = { 'constructor.prototype.polluted': 'a', c: 'b' };
         expect({}.polluted).toBeUndefined();
-        expect(
-          copyProps({}, { a: 'polluted', b: 1 }, fromto, true)
-        ).toEqual({ c: 1 });
+        expect(copyProps({}, { a: 'polluted', b: 1 }, fromto, true)).toEqual({
+          c: 1,
+        });
         expect({}.polluted).toBeUndefined();
         done();
       });

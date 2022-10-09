@@ -168,9 +168,7 @@ describe('Arguments', function () {
         return srcInfo.value * 2;
       };
       var expected = { a: 20, b: { c: 2, d: 40 } };
-      expect(copyProps(src, dst, fromto, converter, true)).toEqual(
-        expected
-      );
+      expect(copyProps(src, dst, fromto, converter, true)).toEqual(expected);
       done();
     });
 
@@ -185,31 +183,21 @@ describe('Arguments', function () {
       expect(copyProps(src, dst, fromto, converter, undefined)).toEqual(
         expected
       );
-      expect(copyProps(src, dst, fromto, converter, null)).toEqual(
-        expected
-      );
+      expect(copyProps(src, dst, fromto, converter, null)).toEqual(expected);
       expect(copyProps(src, dst, fromto, converter, 0)).toEqual(expected);
-      expect(copyProps(src, dst, fromto, converter, 123)).toEqual(
+      expect(copyProps(src, dst, fromto, converter, 123)).toEqual(expected);
+      expect(copyProps(src, dst, fromto, converter, '')).toEqual(expected);
+      expect(copyProps(src, dst, fromto, converter, 'ABC')).toEqual(expected);
+      expect(copyProps(src, dst, fromto, converter, [1, 2])).toEqual(expected);
+      expect(copyProps(src, dst, fromto, converter, { a: 1, b: 2 })).toEqual(
         expected
       );
-      expect(copyProps(src, dst, fromto, converter, '')).toEqual(
-        expected
-      );
-      expect(copyProps(src, dst, fromto, converter, 'ABC')).toEqual(
-        expected
-      );
-      expect(copyProps(src, dst, fromto, converter, [1, 2])).toEqual(
-        expected
-      );
-      expect(
-        copyProps(src, dst, fromto, converter, { a: 1, b: 2 })
-      ).toEqual(expected);
       expect(copyProps(src, dst, fromto, converter, new Date())).toEqual(
         expected
       );
-      expect(
-        copyProps(src, dst, fromto, converter, function () {})
-      ).toEqual(expected);
+      expect(copyProps(src, dst, fromto, converter, function () {})).toEqual(
+        expected
+      );
       done();
     });
   });
