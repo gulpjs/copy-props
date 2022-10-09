@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.0](https://www.github.com/gulpjs/copy-props/compare/v3.0.1...v4.0.0) (2022-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade each-props to v3.0.0
+* Remove pre-built browser bundles (#13)
+
+### Miscellaneous Chores
+
+* Remove pre-built browser bundles ([#13](https://www.github.com/gulpjs/copy-props/issues/13)) ([ebb6dab](https://www.github.com/gulpjs/copy-props/commit/ebb6dab580fbcd4a4d9f3e0adbd3b4873ad4fb96))
+* Upgrade each-props to v3.0.0 ([ebb6dab](https://www.github.com/gulpjs/copy-props/commit/ebb6dab580fbcd4a4d9f3e0adbd3b4873ad4fb96))
+
 ### [3.0.1](https://www.github.com/gulpjs/copy-props/compare/v3.0.0...v3.0.1) (2021-10-31)
 
 
