@@ -18,25 +18,13 @@ To install from npm:
 $ npm i copy-props --save
 ```
 
-## Load this module
-
-For Node.js:
-
-```js
-const copyProps = require('copy-props');
-```
-
-For Web browser:
-
-```html
-<script src="copy-props.min.js"></script>
-```
-
 ## Usage
 
 Copy _src_ to _dst_ simply (and return _dst_) :
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
 var dst = { a: 2, b: { b1: 'xxx', b2: 'yyy' } };
 
@@ -47,6 +35,8 @@ copyProps(src, dst);
 Copy _src_ to _dst_ with property mapping (and return _dst_) :
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc', d: 'ddd' };
 var dst = { f: { a: 2, b1: 'xxx', b2: 'yyy' }, e: 'zzz' };
 
@@ -62,6 +52,8 @@ copyProps(src, dst, {
 Copy _src_ to _dst_ with convert function (and return _dst_) :
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { b1: 'bbb' } };
 var dst = { a: 0 };
 
@@ -79,6 +71,8 @@ copyProps(src, dst, function (srcInfo) {
 Can use an array instead of a map as property mapping :
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } };
 var dst = { a: 9, b: { c: 'xxx' }, d: { e: 'yyy' } };
 var fromto = ['b.c', 'd.e'];
@@ -89,6 +83,8 @@ copyProps(src, dst, fromto);
 Can copy reversively (from _dst_ to _src_) by reverse flag (and return _src_):
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
 var dst = { a: 2, b: { b1: 'xxx', b2: 'yyy' } };
 
@@ -97,6 +93,8 @@ copyProps(src, dst, true);
 ```
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc', d: 'ddd' };
 var dst = { f: { a: 2, b1: 'xxx', b2: 'yyy' }, e: 'zzz' };
 
@@ -116,6 +114,8 @@ copyProps(
 If a value of source property is undefined (when not using converter), or a result of converter is undefined (when using converter), the value is not copied.
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 'A', b: undefined, c: null, d: 1 };
 var dst = { a: 'a', b: 'b', c: 'c' };
 
@@ -132,6 +132,8 @@ copyProps(src, dst, function (srcInfo) {
 You can operate the parent node object directly in converter.
 
 ```js
+const copyProps = require('copy-props');
+
 var src = { a: 1, b: 2 };
 var dst = {};
 
@@ -221,10 +223,7 @@ _dst_ object after copying.
 
 ## License
 
-Copyright (C) 2016-2021 Gulp Team.
-
-This program is free software under [MIT][mit-url] License.
-See the file LICENSE in this distribution for more details.
+MIT
 
 <!-- prettier-ignore-start -->
 [downloads-image]: https://img.shields.io/npm/dm/copy-props.svg?style=flat-square
@@ -236,8 +235,4 @@ See the file LICENSE in this distribution for more details.
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/copy-props
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/master.svg
-<!-- prettier-ignore-end -->
-
-<!-- prettier-ignore-start -->
-[mit-url]: https://opensource.org/licenses/MIT
 <!-- prettier-ignore-end -->
