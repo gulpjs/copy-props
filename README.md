@@ -10,14 +10,6 @@
 
 Copy properties between two objects deeply.
 
-## Install
-
-To install from npm:
-
-```sh
-$ npm i copy-props --save
-```
-
 ## Usage
 
 Copy _src_ to _dst_ simply (and return _dst_) :
@@ -153,7 +145,7 @@ dst; // -> { a: 2, b: 4 }
 
 ## API
 
-### <u>copyProps(src, dst [, fromto] [, converter] [, reverse]) => object</u>
+### copyProps(src, dst [, fromto] [, converter] [, reverse]) => object
 
 Copy properties of _src_ to _dst_ deeply.
 If _fromto_ is given, it is able to copy between different properties.
@@ -175,7 +167,7 @@ _dst_ object after copying.
 
 **Type:** object
 
-- **Format of <i>fromto</i>**
+- **Format of _fromto_**
 
   _fromto_ is a non-nested key-value object. And the *key*s are property key chains of _src_ and the *value*s are property key chains of _dst_.
   The key chain is a string which is concatenated property keys on each level with dots, like `'aaa.bbb.ccc'`.
@@ -190,9 +182,9 @@ _dst_ object after copying.
 
   _fromto_ can be an array. In that case, the array works as a map which has pairs of same key and value.
 
-- **API of <i>converter</i>**
+- **API of _converter_**
 
-  **<u>converter(srcInfo, dstInfo) : Any</u>**
+  **converter(srcInfo, dstInfo) : Any**
 
   _converter_ is a function to convert terminal values of propeerties of _src_.
 
@@ -209,7 +201,7 @@ _dst_ object after copying.
 
   **Type:** _Any_
 
-  - **Properties of <i>srcInfo</i> and <i>dstInfo</i>**
+  - **Properties of _srcInfo_ and _dstInfo_**
 
     _srcInfo_ and _dstInfo_ has same properties, as follows:
 
