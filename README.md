@@ -223,7 +223,7 @@ MIT
 [npm-image]: https://img.shields.io/npm/v/copy-props.svg?style=flat-square
 
 [ci-url]: https://github.com/gulpjs/copy-props/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/copy-props/dev?style=flat-square
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/copy-props/dev.yml?branch=master&style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/copy-props
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/master.svg
