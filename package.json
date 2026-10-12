@@ -1,6 +1,6 @@
 {
   "name": "copy-props",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Copy properties deeply between two objects.",
   "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
   "funding": "https://github.com/sponsors/gulpjs",
