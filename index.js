@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-var eachProps = require('each-props');
-var isPlainObject = require('is-plain-object').isPlainObject;
+var eachProps = require("each-props");
+var isPlainObject = require("is-plain-object").isPlainObject;
 
 module.exports = function (src, dst, fromto, converter, reverse) {
   if (!isObject(src)) {
@@ -16,11 +16,11 @@ module.exports = function (src, dst, fromto, converter, reverse) {
     fromto = onlyValueIsString(fromto);
   } else if (Array.isArray(fromto)) {
     fromto = arrayToObject(fromto);
-  } else if (typeof fromto === 'boolean') {
+  } else if (typeof fromto === "boolean") {
     reverse = fromto;
     converter = noop;
     fromto = null;
-  } else if (typeof fromto === 'function') {
+  } else if (typeof fromto === "function") {
     reverse = converter;
     converter = fromto;
     fromto = null;
@@ -28,8 +28,8 @@ module.exports = function (src, dst, fromto, converter, reverse) {
     fromto = null;
   }
 
-  if (typeof converter !== 'function') {
-    if (typeof converter === 'boolean') {
+  if (typeof converter !== "function") {
+    if (typeof converter === "boolean") {
       reverse = converter;
       converter = noop;
     } else {
@@ -37,7 +37,7 @@ module.exports = function (src, dst, fromto, converter, reverse) {
     }
   }
 
-  if (typeof reverse !== 'boolean') {
+  if (typeof reverse !== "boolean") {
     reverse = false;
   }
 
@@ -147,7 +147,7 @@ function onlyValueIsString(obj) {
   var newObj = {};
   for (var key in obj) {
     var val = obj[key];
-    if (typeof val === 'string') {
+    if (typeof val === "string") {
       newObj[key] = val;
     }
   }
@@ -158,7 +158,7 @@ function arrayToObject(arr) {
   var obj = {};
   for (var i = 0, n = arr.length; i < n; i++) {
     var elm = arr[i];
-    if (typeof elm === 'string') {
+    if (typeof elm === "string") {
       obj[elm] = elm;
     }
   }
@@ -178,7 +178,7 @@ function invert(fromto) {
 }
 
 function setDeep(obj, keyChain, valueCreator) {
-  _setDeep(obj, keyChain.split('.'), 1, valueCreator);
+  _setDeep(obj, keyChain.split("."), 1, valueCreator);
 }
 
 function _setDeep(obj, keyElems, depth, valueCreator) {
@@ -226,9 +226,9 @@ function newUndefined() {
 }
 
 function isObject(v) {
-  return Object.prototype.toString.call(v) === '[object Object]';
+  return Object.prototype.toString.call(v) === "[object Object]";
 }
 
 function isPossibilityOfPrototypePollution(key) {
-  return key === '__proto__' || key === 'constructor';
+  return key === "__proto__" || key === "constructor";
 }

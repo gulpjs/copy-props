@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://gulpjs.com">
+  <a href="https://gulpjs.com">
     <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
   </a>
 </p>
@@ -15,10 +15,10 @@ Copy properties between two objects deeply.
 Copy _src_ to _dst_ simply (and return _dst_) :
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
-var dst = { a: 2, b: { b1: 'xxx', b2: 'yyy' } };
+var src = { a: 1, b: { b1: "bbb" }, c: "ccc" };
+var dst = { a: 2, b: { b1: "xxx", b2: "yyy" } };
 
 copyProps(src, dst);
 // => { a: 1, b: { b1: 'bbb', b2: 'yyy' }, c: 'ccc' }
@@ -27,16 +27,16 @@ copyProps(src, dst);
 Copy _src_ to _dst_ with property mapping (and return _dst_) :
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc', d: 'ddd' };
-var dst = { f: { a: 2, b1: 'xxx', b2: 'yyy' }, e: 'zzz' };
+var src = { a: 1, b: { b1: "bbb" }, c: "ccc", d: "ddd" };
+var dst = { f: { a: 2, b1: "xxx", b2: "yyy" }, e: "zzz" };
 
 copyProps(src, dst, {
-  a: 'f.a',
-  'b.b1': 'f.b1',
-  'b.b2': 'f.b2',
-  c: 'f.c',
+  a: "f.a",
+  "b.b1": "f.b1",
+  "b.b2": "f.b2",
+  c: "f.c",
 });
 // => { f: { a: 1, b1: 'bbb', b2: 'yyy', c: 'ccc' }, e: 'zzz' }
 ```
@@ -44,16 +44,16 @@ copyProps(src, dst, {
 Copy _src_ to _dst_ with convert function (and return _dst_) :
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { b1: 'bbb' } };
+var src = { a: 1, b: { b1: "bbb" } };
 var dst = { a: 0 };
 
 copyProps(src, dst, function (srcInfo) {
-  if (srcInfo.keyChain === 'a') {
+  if (srcInfo.keyChain === "a") {
     return srcInfo.value * 2;
   }
-  if (srcInfo.keyChain === 'b.b1') {
+  if (srcInfo.keyChain === "b.b1") {
     return srcInfo.value.toUpperCase();
   }
 });
@@ -63,11 +63,11 @@ copyProps(src, dst, function (srcInfo) {
 Can use an array instead of a map as property mapping :
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { c: 'CCC' }, d: { e: 'EEE' } };
-var dst = { a: 9, b: { c: 'xxx' }, d: { e: 'yyy' } };
-var fromto = ['b.c', 'd.e'];
+var src = { a: 1, b: { c: "CCC" }, d: { e: "EEE" } };
+var dst = { a: 9, b: { c: "xxx" }, d: { e: "yyy" } };
+var fromto = ["b.c", "d.e"];
 copyProps(src, dst, fromto);
 // => { a: 9, b: { c: 'CCC' }, d: { e: 'EEE' } }
 ```
@@ -75,30 +75,30 @@ copyProps(src, dst, fromto);
 Can copy reversively (from _dst_ to _src_) by reverse flag (and return _src_):
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc' };
-var dst = { a: 2, b: { b1: 'xxx', b2: 'yyy' } };
+var src = { a: 1, b: { b1: "bbb" }, c: "ccc" };
+var dst = { a: 2, b: { b1: "xxx", b2: "yyy" } };
 
 copyProps(src, dst, true);
 // => { a: 2, b: { b1: 'xxx', b2: 'yyy' }, c: 'ccc' }
 ```
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 1, b: { b1: 'bbb' }, c: 'ccc', d: 'ddd' };
-var dst = { f: { a: 2, b1: 'xxx', b2: 'yyy' }, e: 'zzz' };
+var src = { a: 1, b: { b1: "bbb" }, c: "ccc", d: "ddd" };
+var dst = { f: { a: 2, b1: "xxx", b2: "yyy" }, e: "zzz" };
 
 copyProps(
   src,
   dst,
   {
-    a: 'f.a',
-    'b.b2': 'f.b2',
-    c: 'f.c',
+    a: "f.a",
+    "b.b2": "f.b2",
+    c: "f.c",
   },
-  true
+  true,
 );
 // => { a: 2, b: { b1: 'bbb', b2: 'yyy' }, c: 'ccc', d: 'ddd' }
 ```
@@ -106,13 +106,13 @@ copyProps(
 If a value of source property is undefined (when not using converter), or a result of converter is undefined (when using converter), the value is not copied.
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
-var src = { a: 'A', b: undefined, c: null, d: 1 };
-var dst = { a: 'a', b: 'b', c: 'c' };
+var src = { a: "A", b: undefined, c: null, d: 1 };
+var dst = { a: "a", b: "b", c: "c" };
 
 copyProps(src, dst, function (srcInfo) {
-  if (srcInfo.keyChain === 'd') {
+  if (srcInfo.keyChain === "d") {
     return undefined;
   } else {
     return srcInfo.value;
@@ -124,7 +124,7 @@ copyProps(src, dst, function (srcInfo) {
 You can operate the parent node object directly in converter.
 
 ```js
-const copyProps = require('copy-props');
+const copyProps = require("copy-props");
 
 var src = { a: 1, b: 2 };
 var dst = {};
@@ -176,7 +176,7 @@ _dst_ object after copying.
 
   ```js
   copyProps(src, dst, {
-    'aaa.bbb.ccc': 'xxx.yyy',
+    "aaa.bbb.ccc": "xxx.yyy",
   });
   ```
 
@@ -213,6 +213,16 @@ _dst_ object after copying.
     | _depth_    | number | The depth of the current node.                          |
     | _parent_   | object | The parent node of the current node.                    |
 
+## Strict No LLM / No AI Policy
+
+No LLMs for issues.
+
+No LLMs for patches / pull requests.
+
+No LLMs for comments on the bug tracker, including translation.
+
+English is encouraged, but not required. You are welcome to post in your native language and rely on others to have their own translation tools of choice to interpret your words. |
+
 ## License
 
 MIT
@@ -222,9 +232,9 @@ MIT
 [npm-url]: https://www.npmjs.org/package/copy-props
 [npm-image]: https://img.shields.io/npm/v/copy-props.svg?style=flat-square
 
-[ci-url]: https://github.com/gulpjs/copy-props/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/copy-props/dev.yml?branch=master&style=flat-square
+[ci-url]: https://github.com/gulpjs/copy-props/actions/workflows/dev.yml
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/copy-props/dev.yml?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/copy-props
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/master.svg
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/copy-props/main.svg?style=flat-square
 <!-- prettier-ignore-end -->
