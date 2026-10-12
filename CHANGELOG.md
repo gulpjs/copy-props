@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/gulpjs/copy-props/compare/v4.0.0...v5.0.0) (2026-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Normalize repository, dropping Node <22.15.0 ([#17](https://github.com/gulpjs/copy-props/issues/17))
+
+### Miscellaneous Chores
+
+* Normalize repository, dropping Node &lt;22.15.0 ([#17](https://github.com/gulpjs/copy-props/issues/17)) ([4eb9b73](https://github.com/gulpjs/copy-props/commit/4eb9b7368d8f11a12c7fad15402b6093d5b9576a))
+
 ## [4.0.0](https://www.github.com/gulpjs/copy-props/compare/v3.0.1...v4.0.0) (2022-10-09)
 
 
