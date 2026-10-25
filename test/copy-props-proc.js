@@ -641,7 +641,7 @@ describe("Processing", function () {
             break;
           }
           default: {
-            assert.strictEqual(true, false);
+            assert.fail("should never be reached");
             break;
           }
         }
