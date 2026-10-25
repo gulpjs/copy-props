@@ -367,7 +367,7 @@ describe("Processing", function () {
             break;
           }
           default: {
-            assert.deepStrictEqual(true, false);
+            assert.fail("should never be reached");
             break;
           }
         }
